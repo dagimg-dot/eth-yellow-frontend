@@ -1,8 +1,7 @@
 <script setup></script>
 <template>
   <div>
-    Fire
-    <notification></notification>
+    Default
     <router-view></router-view>
   </div>
 </template>

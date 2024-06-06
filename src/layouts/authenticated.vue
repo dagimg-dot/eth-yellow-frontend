@@ -1,8 +1,7 @@
 <script setup></script>
 <template>
      <div>
-          authenticated
+          Authenticated
           <router-view></router-view>
-          footer
      </div>
 </template>
