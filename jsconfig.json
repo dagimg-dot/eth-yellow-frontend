@@ -2,7 +2,36 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@assets/*": [
+        "src/assets/*"
+      ],
+      "@layouts/*": [
+        "src/layouts/*"
+      ],
+      "@pages/*": [
+        "src/pages/*"
+      ],
+      "@use/*": [
+        "src/use/*"
+      ],
+      "@composables/*": [
+        "src/composables/*"
+      ],
+      "@plugins/*": [
+        "src/plugins/*"
+      ],
+      "@router/*": [
+        "src/router/*"
+      ],
+      "@styles/*": [
+        "src/styles/*"
+      ]
     }
   }
 }

@@ -8,7 +8,6 @@ import useUser from "@/use/user";
 import router from "@/router";
 import { ApolloLink, from } from "apollo-link";
 
-
 const { isLoggedIn, token, unset } = useUser();
 
 const cache = new InMemoryCache({
@@ -16,11 +15,11 @@ const cache = new InMemoryCache({
 });
 
 // default client
-const default_http_link = createHttpLink({
+const defaultHttpLink = createHttpLink({
   uri: import.meta.env.VITE_GRAPH_URL,
 });
 
-const default_error_link = onError(({ graphQLErrors, networkError }) => {
+const defaultErrorLink = onError(({ graphQLErrors, networkError }) => {
   if (graphQLErrors && graphQLErrors[0].extensions.code === "invalid-jwt") {
     // toast.error("Session Expired! Please Login Again!")
     unset();
@@ -29,16 +28,15 @@ const default_error_link = onError(({ graphQLErrors, networkError }) => {
   }
 });
 
-const default_auth_link = new ApolloLink((operation, forward) => {
+const defaultAuthLink = new ApolloLink((operation, forward) => {
   const { headers } = operation.getContext();
 
   const h = {
     ...headers,
   };
 
-
-  if (isLoggedIn.value &&  !h['hopt']) {
-      h.authorization = `Bearer ${token()}`
+  if (isLoggedIn.value && !h["hopt"]) {
+    h.authorization = `Bearer ${token()}`;
   }
 
   operation.setContext({
@@ -48,11 +46,9 @@ const default_auth_link = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
-const default_apollo_client = new ApolloClient({
-  link: from([default_auth_link, default_error_link, default_http_link]),
+const defaultApolloClient = new ApolloClient({
+  link: from([defaultAuthLink, defaultErrorLink, defaultHttpLink]),
   cache,
 });
 
-export  {
-    default_apollo_client,
-};
+export { defaultApolloClient };
