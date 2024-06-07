@@ -36,6 +36,8 @@ export function useLogin() {
       } else if (loginData.message == "Invalid email or password") {
         throw new Error(loginData.message);
       }
+
+      result.value = loginData;
     } catch (err) {
       error.value = err.message;
     } finally {

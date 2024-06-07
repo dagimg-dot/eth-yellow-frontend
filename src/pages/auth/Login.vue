@@ -1,6 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { useLogin } from '@/composables/login';
+import { toast } from 'vue3-toastify';
+import { useRouter } from 'vue-router';
 
 const form = ref({
 	email: '',
@@ -22,31 +24,20 @@ const isPasswordVisible = ref(false);
 const loginForm = ref(null);
 
 const { loading, error, result, executeLogin } = useLogin();
+const router = useRouter()
 
 const loginHandler = async () => {
-
-	// check if the form is valid
 	const { valid } = await loginForm.value.validate();
-
 
 	if (!valid) {
 		return;
 	}
 
-	try {
-		await executeLogin(form.value);
+	await executeLogin(form.value);
 
-		if (error.value) {
-			console.log("This is an error: ", error.value);
-		}
-
-		if (result.value) {
-			const loginResponse = result.value.data
-			console.log(loginResponse)
-		}
-
-	} catch (err) {
-		console.log(err);
+	if (result.value.success) {
+		toast.success(result.value.message);
+		router.push("/")
 	}
 };
 </script>
