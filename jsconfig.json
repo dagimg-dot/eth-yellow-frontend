@@ -31,7 +31,13 @@
       ],
       "@styles/*": [
         "src/styles/*"
-      ]
+      ],
+      "@iconify/*": [
+        "src/@iconify/*"
+      ],
+      "@queries/*": [
+        "src/queries/*"
+      ],
     }
   }
 }

@@ -5,55 +5,135 @@ import { useLogin } from '@/composables/login';
 const form = ref({
 	email: '',
 	password: '',
+	remember: false,
 })
 
-const isPasswordVisible = ref(false)
-const { login, loading, error, user } = useLogin();
+const emailRules = [
+	v => !!v || 'E-mail is required',
+	v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+]
+
+const passwordRules = [
+	v => !!v || 'Password is required',
+	v => v.length >= 8 || 'Password must be at least 8 characters',
+]
+
+const isPasswordVisible = ref(false);
+const loginForm = ref(null);
+
+const { loading, error, result, executeLogin } = useLogin();
 
 const loginHandler = async () => {
-	console.log(form.value)
-	try {
-		const response = await login(form.value);
-		if (response.success) {
 
-			console.log('Login successful:', user.value);
-		} else {
-			// Handle login failure (e.g., show an error message)
-			console.log('Login failed:', response.message);
+	// check if the form is valid
+	const { valid } = await loginForm.value.validate();
+
+
+	if (!valid) {
+		return;
+	}
+
+	try {
+		await executeLogin(form.value);
+
+		if (error.value) {
+			console.log("This is an error: ", error.value);
 		}
+
+		if (result.value) {
+			const loginResponse = result.value.data
+			console.log(loginResponse)
+		}
+
 	} catch (err) {
-		console.log('An error occurred during login:', err);
+		console.log(err);
 	}
 };
 </script>
 
 <template>
-	<div class="d-flex h-screen align-center">
-		<VContainer>
-			<VRow justify="center">
-				<VCol cols="5">
-					<VCard>
-						<VCardTitle>
-							ethyellow.
-						</VCardTitle>
-						<VCardText>
-							<VForm @submit.prevent="loginHandler">
-								<VTextField v-model="form.email" label="Email" required />
-								<VTextField v-model="form.password" label="Password" placeholder="············"
-									:type="isPasswordVisible ? 'text' : 'password'"
-									:append-inner-icon="isPasswordVisible ? 'mdi-hide' : 'mdi-show'"
-									@click:append-inner="isPasswordVisible = !isPasswordVisible" />
-								<VAlert v-if="error" type="error" dismissible>
-									{{ error }}
-								</VAlert>
-								<VBtn block type="submit" elevation="0" :loading="loading">
-									<span class="text-white"> Login</span>
-								</VBtn>
-							</VForm>
-						</VCardText>
-					</VCard>
-				</VCol>
-			</VRow>
-		</VContainer>
+	<div class="d-flex h-screen align-center justify-center bg-grey-lighten-4">
+		<VCard class="auth-card pa-4 pt-7" max-width="448">
+			<VCardItem class="justify-center">
+				<VCardTitle class="text-2xl font-weight-bold">
+					ethyellow.
+				</VCardTitle>
+			</VCardItem>
+
+			<VCardText class="pt-2">
+				<h5 class="text-h5 mb-1">
+					Welcome to ethyellow! 👋🏻
+				</h5>
+				<p class="mb-0">
+					Please sign-in to your account and start your business adventure
+				</p>
+			</VCardText>
+
+			<VCardText>
+				<VForm @submit.prevent="loginHandler" ref="loginForm">
+					<VRow>
+						<!-- Email -->
+						<VCol cols="12">
+							<VTextField v-model="form.email" autofocus placeholder="johndoe@email.com" label="Email"
+								:rules="emailRules" type="email" required />
+						</VCol>
+
+						<!-- Password -->
+						<VCol>
+							<VTextField v-model="form.password" label="Password" placeholder="············"
+								:type="isPasswordVisible ? 'text' : 'password'"
+								:append-inner-icon="isPasswordVisible ? 'bx-hide' : 'bx-show'"
+								@click:append-inner="isPasswordVisible = !isPasswordVisible" :rules="passwordRules"
+								required />
+
+							<!-- remember me checkbox -->
+							<div class="d-flex align-center justify-space-between flex-wrap mt-1 mb-2">
+								<VCheckbox v-model="form.remember" label="Remember me" />
+
+								<RouterLink class="text-primary ms-2 mb-1" to="javascript:void(0)">
+									Forgot Password?
+								</RouterLink>
+							</div>
+
+							<div class="mb-6">
+								<v-alert v-if="error" icon="bxs-x-circle" :text="error" type="error" variant="tonal"
+									closable>
+								</v-alert>
+							</div>
+
+							<!-- login button -->
+							<VBtn block type="submit" :loading="loading">
+								Login
+							</VBtn>
+						</VCol>
+
+						<!-- create account -->
+						<VCol cols="12" class="text-center text-base">
+							<span>New on our platform?</span>
+							<RouterLink class="text-primary ms-2" to="/register">
+								Create an account
+							</RouterLink>
+						</VCol>
+
+						<VCol cols="12" class="d-flex align-center">
+							<VDivider />
+							<span class="mx-4">or</span>
+							<VDivider />
+						</VCol>
+						<!-- auth providers -->
+						<VCol cols="12" class="text-center">
+							<AuthProvider />
+						</VCol>
+					</VRow>
+				</VForm>
+			</VCardText>
+
+		</VCard>
 	</div>
 </template>
+
+<style scoped>
+.auth-card {
+	box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+</style>

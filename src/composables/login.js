@@ -1,67 +1,52 @@
-import { ref } from "vue";
-import { useQuery } from "@vue/apollo-composable";
-import gql from "graphql-tag";
-import { provideApolloClient } from "@vue/apollo-composable";
+import { useMutation, provideApolloClient } from "@vue/apollo-composable";
 import { defaultApolloClient } from "@/plugins/apollo";
+import { ref } from "vue";
+import LOGIN_MUTATION from "@/queries/login.gql";
 
-// Provide the default Apollo Client
 provideApolloClient(defaultApolloClient);
 
-const LOGIN_QUERY = gql`
-  query Login($email: String!, $password: String!) {
-    login(params: { email: $email, password: $password }) {
-      accessToken
-      message
-      success
-      errors {
-        message
-      }
-    }
-  }
-`;
+const mergeErrorsMessage = (errors) => {
+  const errMessage = "";
+
+  return errors.forEach((err) => {
+    errMessage += err + " ";
+  });
+};
 
 export function useLogin() {
-  const _loading = ref(false);
+  const loading = ref(false);
   const error = ref(null);
-  const user = ref(null);
+  const result = ref(null);
 
-  const login = async ({ email, password }) => {
+  const { mutate: login } = useMutation(LOGIN_MUTATION, {
+    onError: (err) => {
+      error.value = err;
+    },
+  });
+
+  const executeLogin = async ({ email, password }) => {
+    loading.value = true;
     error.value = null;
 
     try {
-      const { onResult, onError, loading } = useQuery(LOGIN_QUERY, {
-        email,
-        password,
-      });
-
-      _loading.value = loading;
-
-      return new Promise((resolve, reject) => {
-        onResult((result) => {
-          if (result.data.login.success) {
-            user.value = result.data.login;
-            resolve({ success: true, message: result.data.login.message });
-          } else {
-            error.value = result.data.login.errors || result.data.login.message;
-            reject({ success: false, message: result.data.login.message });
-          }
-        });
-
-        onError((err) => {
-          error.value = err;
-          reject({ success: false, message: err.message });
-        });
-      });
+      const response = await login({ email, password });
+      const { login: loginData } = response.data;
+      if (loginData.errors || loginData.message == "Error") {
+        throw new Error(mergeErrorsMessage(loginData.errors));
+      } else if (loginData.message == "Invalid email or password") {
+        throw new Error(loginData.message);
+      }
     } catch (err) {
-      error.value = err;
-      return { success: false, message: err.message };
+      error.value = err.message;
+    } finally {
+      loading.value = false;
     }
   };
 
   return {
-    login,
-    _loading,
+    loading,
     error,
-    user,
+    result,
+    executeLogin,
   };
 }
