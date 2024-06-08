@@ -1,9 +1,6 @@
-import { useMutation, provideApolloClient } from "@vue/apollo-composable";
-import { defaultApolloClient } from "@/plugins/apollo";
+import { useMutation } from "@vue/apollo-composable";
 import { ref } from "vue";
-import LOGIN_MUTATION from "@/queries/login.gql";
-
-provideApolloClient(defaultApolloClient);
+import LOGIN_MUTATION from "@/graphql/mutations/login.gql";
 
 const mergeErrorsMessage = (errors) => {
   const errMessage = "";
@@ -31,8 +28,10 @@ export function useLogin() {
     try {
       const response = await login({ email, password });
       const { login: loginData } = response.data;
-      if (loginData.errors || loginData.message == "Error") {
+      if (loginData.errors) {
         throw new Error(mergeErrorsMessage(loginData.errors));
+      } else if (loginData.message == "Error") {
+        throw new Error(loginData.message);
       } else if (loginData.message == "Invalid email or password") {
         throw new Error(loginData.message);
       }
