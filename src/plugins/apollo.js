@@ -4,11 +4,11 @@ import {
   InMemoryCache,
 } from "@apollo/client/core";
 import { onError } from "@apollo/client/link/error";
-import useUser from "@/use/user";
 import router from "@/router";
 import { ApolloLink, from } from "apollo-link";
-
-const { isLoggedIn, token, unset } = useUser();
+import { useAuthStore } from "@/store/auth";
+import { toast } from "vue3-toastify";
+import { storeToRefs } from "pinia";
 
 const cache = new InMemoryCache({
   addTypename: false,
@@ -20,23 +20,33 @@ const defaultHttpLink = createHttpLink({
 });
 
 const defaultErrorLink = onError(({ graphQLErrors, networkError }) => {
+  const authStore = useAuthStore();
+
   if (graphQLErrors && graphQLErrors[0].extensions.code === "invalid-jwt") {
-    // toast.error("Session Expired! Please Login Again!")
-    unset();
+    toast.error("Session Expired! Please Login Again!");
+    authStore.logout();
     router.replace("/");
     return;
+  }
+
+  if (networkError) {
+    toast.error("Network Error! Please try again later.");
   }
 });
 
 const defaultAuthLink = new ApolloLink((operation, forward) => {
+  const authStore = useAuthStore();
+
   const { headers } = operation.getContext();
 
   const h = {
     ...headers,
   };
 
+  const { isLoggedIn, token } = storeToRefs(authStore);
+
   if (isLoggedIn.value && !h["hopt"]) {
-    h.authorization = `Bearer ${token()}`;
+    h.authorization = `Bearer ${token.value}`;
   }
 
   operation.setContext({
