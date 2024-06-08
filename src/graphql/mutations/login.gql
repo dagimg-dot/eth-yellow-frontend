@@ -4,7 +4,7 @@ mutation Login($email: String!, $password: String!) {
     message
     success
     errors {
-      message,
+      message
       extensions {
         code
       }
