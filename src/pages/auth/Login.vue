@@ -1,8 +1,8 @@
 <script setup>
 import { ref } from 'vue';
 import { useLogin } from '@/composables/login';
-import { toast } from 'vue3-toastify';
 import { useRouter } from 'vue-router';
+import { toast } from 'vue3-toastify';
 
 const form = ref({
 	email: '',
@@ -35,7 +35,7 @@ const loginHandler = async () => {
 
 	await executeLogin(form.value);
 
-	if (result.value.success) {
+	if (result.value && result.value.success) {
 		toast.success(result.value.message);
 		router.push("/")
 	}
@@ -81,11 +81,12 @@ const loginHandler = async () => {
 							<div class="d-flex align-center justify-space-between flex-wrap mt-1 mb-2">
 								<VCheckbox v-model="form.remember" label="Remember me" />
 
-								<RouterLink class="text-primary ms-2 mb-1" to="javascript:void(0)">
+								<RouterLink class="text-primary ms-2 mb-1" to="">
 									Forgot Password?
 								</RouterLink>
 							</div>
 
+							<!-- Error Alert -->
 							<div class="mb-6">
 								<v-alert v-if="error" icon="bxs-x-circle" :text="error" type="error" variant="tonal"
 									closable>
@@ -101,7 +102,7 @@ const loginHandler = async () => {
 						<!-- create account -->
 						<VCol cols="12" class="text-center text-base">
 							<span>New on our platform?</span>
-							<RouterLink class="text-primary ms-2" to="/register">
+							<RouterLink class="text-primary ms-2" to="/auth/signup">
 								Create an account
 							</RouterLink>
 						</VCol>
