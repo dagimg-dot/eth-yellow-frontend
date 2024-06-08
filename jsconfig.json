@@ -38,6 +38,9 @@
       "@queries/*": [
         "src/queries/*"
       ],
+      "@store/*": [
+        "src/store/*"
+      ],
     }
   }
 }
