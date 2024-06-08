@@ -3,11 +3,17 @@ import { ref } from "vue";
 import LOGIN_MUTATION from "@/graphql/mutations/login.gql";
 
 const mergeErrorsMessage = (errors) => {
-  const errMessage = "";
+  let errMessage = "";
 
-  return errors.forEach((err) => {
-    errMessage += err + " ";
+  if (errors.length === 1) {
+    return errors[0].message;
+  }
+
+  errors.forEach((err) => {
+    errMessage += err.message + ", ";
   });
+
+  return errMessage;
 };
 
 export function useLogin() {
@@ -28,12 +34,8 @@ export function useLogin() {
     try {
       const response = await login({ email, password });
       const { login: loginData } = response.data;
-      if (loginData.errors) {
+      if (loginData.errors.length > 0) {
         throw new Error(mergeErrorsMessage(loginData.errors));
-      } else if (loginData.message == "Error") {
-        throw new Error(loginData.message);
-      } else if (loginData.message == "Invalid email or password") {
-        throw new Error(loginData.message);
       }
 
       result.value = loginData;
