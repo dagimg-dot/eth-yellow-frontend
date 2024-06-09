@@ -4,18 +4,8 @@ import { useLogin } from '@/composables/login';
 import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 import { useAuthStore } from '@/store/auth';
-import { storeToRefs } from 'pinia';
 
 const authStore = useAuthStore();
-
-onMounted(() => {
-	document.title = "Login | ethyellow";
-	const { isLoggedIn } = storeToRefs(authStore);
-	if (isLoggedIn.value) {
-		toast.info("You are already logged in!");
-		router.push("/");
-	}
-});
 
 const form = ref({
 	email: '',
