@@ -7,7 +7,7 @@ import { getCurrentPosition } from '@/utils/geoLocation';
 const CUR_LOCATION = "Current Location"
 
 const form = ref({
-    location: '',
+    location: 'Location',
     searchQuery: '',
 })
 
