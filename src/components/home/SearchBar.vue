@@ -52,6 +52,8 @@ const locateUser = async () => {
 
 }
 
+const tags = ref(['Restaurant', 'Clinic', 'Pharmacy'])
+
 </script>
 
 <template>
@@ -59,12 +61,12 @@ const locateUser = async () => {
         <VForm class="d-flex ga-4" @submit.prevent="search">
             <VRow>
                 <VCol cols="12" md="4">
-                    <VSelect v-model="form.location" :items="mockLocations" dense prepend-inner-icon="bx-map"
+                    <VCombobox v-model="form.location" :items="mockLocations" dense prepend-inner-icon="bx-map"
                         :loading="loading" @click:prepend-inner="locateUser" label="Location" />
                 </VCol>
                 <VCol cols="12" md="6">
-                    <VTextField v-model="form.searchQuery" label="Search" placeholder="What do you need . . ."
-                        prepend-inner-icon="bx-search" dense />
+                    <VCombobox clearable chips label="Search" placeholder="What do you need . . ."
+                        prepend-inner-icon="bx-search" :items="tags"></VCombobox>
                 </VCol>
                 <VCol cols="12" md="2" width="40">
                     <VBtn type="submit" width="100%" height="100%" density="default">
