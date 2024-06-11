@@ -1,6 +1,13 @@
 <script setup></script>
 <template>
-	<div>
-		<router-view></router-view>
+	<div class="default">
+		<slot />
 	</div>
 </template>
+
+<style scoped>
+.default {
+	max-width: 1300px;
+	margin: 0 auto;
+}
+</style>
