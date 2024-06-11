@@ -1,6 +1,8 @@
 <script setup>
-import { computed, ref, watch } from 'vue'
+import { computed, ref, watch, watchEffect } from 'vue'
 import { toast } from 'vue3-toastify';
+import { useReverseGeoCode } from '@/composables/reverseGeoCode';
+import { getCurrentPosition } from '@/utils/geoLocation';
 
 const CUR_LOCATION = "Current Location"
 
@@ -27,19 +29,27 @@ watch(locationChoice, () => {
     }
 })
 
-const locateUser = () => {
-    console.log('Locating user . . .')
+const { locate, result, loading, error } = useReverseGeoCode()
 
-    navigator.geolocation.getCurrentPosition(
-        position => {
-            console.log(position.coords.latitude);
-            console.log(position.coords.longitude);
-            form.value.location = `${position.coords.latitude}, ${position.coords.longitude}`
-        },
-        error => {
-            toast.error('Location access denied. Please enable location access to use this feature.')
-        }
-    );
+watchEffect(() => {
+    if (result.value) {
+        form.value.location = result.value.address.city || result.value.address.state
+    }
+
+    if (error.value) {
+        toast.error(error.value)
+    }
+})
+
+const locateUser = async () => {
+    try {
+        const { coords } = await getCurrentPosition()
+
+        await locate(coords.latitude, coords.longitude)
+    } catch (error) {
+        toast.error('Failed to locate user')
+    }
+
 }
 
 </script>
@@ -50,14 +60,14 @@ const locateUser = () => {
             <VRow>
                 <VCol cols="12" md="4">
                     <VSelect v-model="form.location" :items="mockLocations" dense prepend-inner-icon="bx-map"
-                        @click:prepend-inner="locateUser" label="Location" />
+                        :loading="loading" @click:prepend-inner="locateUser" label="Location" />
                 </VCol>
                 <VCol cols="12" md="6">
                     <VTextField v-model="form.searchQuery" label="Search" placeholder="What do you need . . ."
                         prepend-inner-icon="bx-search" dense />
                 </VCol>
                 <VCol cols="12" md="2" width="40">
-                    <VBtn type="submit" width="100%" height="100%" density="default" >
+                    <VBtn type="submit" width="100%" height="100%" density="default">
                         Search
                     </VBtn>
                 </VCol>
