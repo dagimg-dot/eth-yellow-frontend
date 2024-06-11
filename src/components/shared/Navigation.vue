@@ -2,21 +2,17 @@
 import { useAuthStore } from '@/store/auth';
 import { storeToRefs } from 'pinia';
 import { onMounted, ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
 
 const isXs = ref(false)
 const drawer = ref(null)
 const authStore = useAuthStore();
 const { isLoggedIn } = storeToRefs(authStore)
 
-const { fullPath } = useRoute()
-
 const onResize = () => {
     isXs.value = window.innerWidth < 1110
 }
 
 onMounted(() => {
-    console.log(fullPath)
     onResize()
     window.addEventListener('resize', onResize, { passive: true })
 })
