@@ -54,7 +54,7 @@ const theme = {
     dark: {
       dark: true,
       colors: {
-        'primary': '#696CFF',
+        'primary': '#DDDF00',
         'on-primary': '#fff',
         'secondary': '#8592A3',
         'on-secondary': '#fff',
