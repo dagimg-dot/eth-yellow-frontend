@@ -29,8 +29,8 @@
       "@router/*": [
         "src/router/*"
       ],
-      "@styles/*": [
-        "src/styles/*"
+      "@scss/*": [
+        "src/scss/*"
       ],
       "@iconify/*": [
         "src/@iconify/*"
