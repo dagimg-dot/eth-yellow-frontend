@@ -1,20 +1,20 @@
 <script setup>
-import { useTheme } from 'vuetify'
+import { useTheme } from "vuetify";
 
-const { global } = useTheme()
+const { global } = useTheme();
 
 const authProviders = [
   {
-    icon: 'bxl-facebook',
-    color: '#4267b2',
-    colorInDark: '#4267b2',
+    icon: "bxl-facebook",
+    color: "#4267b2",
+    colorInDark: "#4267b2",
   },
   {
-    icon: 'bxl-google',
-    color: '#db4437',
-    colorInDark: '#db4437',
+    icon: "bxl-google",
+    color: "#db4437",
+    colorInDark: "#db4437",
   },
-]
+];
 </script>
 
 <template>
