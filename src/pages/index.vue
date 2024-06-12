@@ -13,6 +13,7 @@
         <FooterCTA />
       </VLayout>
     </VMain>
+    <ScrollToTop />
   </VApp>
 </template>
 
