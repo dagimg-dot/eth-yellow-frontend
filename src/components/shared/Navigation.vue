@@ -58,7 +58,7 @@ watch(isXs, () => {
         </VList>
       </VContainer>
     </VNavigationDrawer>
-    <VAppBar color="transparent" flat class="position-absolute top-0">
+    <VAppBar color="transparent" flat>
       <CompanyCard />
       <VSpacer />
       <nav v-if="!isXs" class="main-nav">
@@ -74,7 +74,7 @@ watch(isXs, () => {
           >Sign In</VBtn
         >
       </div>
-      <VAppBarNavIcon @click="drawer = !drawer" v-if="isXs" />
+      <VAppBarNavIcon @click="drawer = !drawer" v-if="isXs" size="x-large"/>
     </VAppBar>
   </nav>
 </template>
