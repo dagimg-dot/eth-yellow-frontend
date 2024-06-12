@@ -9,7 +9,7 @@ const authStore = useAuthStore();
 const navigate = () => {
   const { isLoggedIn } = storeToRefs(authStore);
   if (isLoggedIn.value) {
-    router.push("/list-your-business");
+    router.push("/listings/add");
   } else {
     router.push("/auth/signup");
     toast.info("Please sign up to continue");
