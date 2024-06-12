@@ -42,7 +42,7 @@ const loginHandler = async () => {
 		toast.success(result.value.message);
 		router.push("/")
 
-		authStore.login(result.value.accessToken, { username: "yme", email: "yme@gmail.com" });
+		authStore.login(result.value.accessToken, result.value.user);
 	}
 };
 </script>

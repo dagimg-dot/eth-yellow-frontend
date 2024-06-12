@@ -3,6 +3,11 @@ mutation Login($email: String!, $password: String!) {
     accessToken
     message
     success
+    user {
+      username
+      first_name
+      last_name
+    }
     errors {
       message
       extensions {
