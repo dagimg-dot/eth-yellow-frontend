@@ -57,11 +57,13 @@ const signupHandler = async () => {
 <template>
     <div class="d-flex h-screen align-center justify-center bg-grey-lighten-4">
         <VCard class="auth-card pa-4 pt-7" max-width="448">
-            <VCardItem class="justify-center">
-                <VCardTitle class="text-2xl font-weight-bold">
-                    ethyellow.
-                </VCardTitle>
-            </VCardItem>
+            <RouterLink class="text-decoration-none text-primary" to="/">
+                <VCardItem class="justify-center">
+                    <VCardTitle class=" text-2xl font-weight-bold">
+                        ethyellow.
+                    </VCardTitle>
+                </VCardItem>
+            </RouterLink>
 
             <VCardText class="pt-2">
                 <h5 class="text-h5 mb-1">
