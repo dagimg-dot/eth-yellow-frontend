@@ -35,10 +35,17 @@ watch(isXs, () => {
       <VContainer class="d-flex flex-column justify-space-between h-screen">
         <VList variant="plain">
           <VListItem>
-            <VListItemTitle>Home</VListItemTitle>
+            <RouterLink to="/" class="text-decoration-none text-primary">
+              <VListItemTitle>Home</VListItemTitle>
+            </RouterLink>
           </VListItem>
           <VListItem>
-            <VListItemTitle>About</VListItemTitle>
+            <RouterLink
+              to="/listings"
+              class="text-decoration-none text-primary"
+            >
+              <VListItemTitle>Listings</VListItemTitle>
+            </RouterLink>
           </VListItem>
           <VListItem>
             <VListItemTitle>Services</VListItemTitle>
@@ -53,33 +60,42 @@ watch(isXs, () => {
             <VBtn to="/auth/login" variant="elevated" block>Login</VBtn>
           </VListItem>
           <VListItem>
-            <VBtn variant="outlined">Add Your Business</VBtn>
+            <VBtn variant="outlined" to="/listings/add">Add Your Business</VBtn>
           </VListItem>
         </VList>
       </VContainer>
     </VNavigationDrawer>
     <VAppBar color="transparent" flat>
-      <CompanyCard />
+      <CompanyCard class="animate-fade-in-right" />
       <VSpacer />
       <nav v-if="!isXs" class="main-nav">
         <VBtn to="/">Home</VBtn>
-        <VBtn to="/about">About</VBtn>
+        <VBtn to="/listings">Listings</VBtn>
         <VBtn to="/services">Services</VBtn>
         <VBtn to="/contact">Contact</VBtn>
       </nav>
       <VSpacer />
       <div class="d-flex ga-6 px-4" v-if="!isXs">
-        <VBtn variant="outlined">Add Your Business</VBtn>
+        <VBtn variant="outlined" to="/listings/add" class="animate-fade-in-left"
+          >Add Your Business</VBtn
+        >
         <VBtn v-if="!isLoggedIn" to="/auth/login" variant="elevated"
           >Sign In</VBtn
         >
       </div>
-      <VAppBarNavIcon @click="drawer = !drawer" v-if="isXs" size="x-large"/>
+      <VAppBarNavIcon
+        @click="drawer = !drawer"
+        v-if="isXs"
+        size="x-large"
+        class="animate-fade-in-left"
+      />
     </VAppBar>
   </nav>
 </template>
 
 <style scoped lang="scss">
+@use "@/scss/animation.scss" as *;
+
 .nav-drawer {
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(5px);
