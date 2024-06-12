@@ -23,13 +23,16 @@ const search = () => {
     console.log(form.value)
 }
 
+const { locate, result, loading, error, abort } = useReverseGeoCode()
+
 watch(locationChoice, () => {
     if (form.value.location === CUR_LOCATION) {
         locateUser()
+    } else {
+        abort()
     }
 })
 
-const { locate, result, loading, error } = useReverseGeoCode()
 
 watchEffect(() => {
     if (result.value) {
@@ -38,6 +41,7 @@ watchEffect(() => {
 
     if (error.value) {
         toast.error(error.value)
+        error.value = null
     }
 })
 
@@ -69,7 +73,7 @@ const tags = ref(['Restaurant', 'Clinic', 'Pharmacy'])
                         prepend-inner-icon="bx-search" :items="tags"></VCombobox>
                 </VCol>
                 <VCol cols="12" md="2" width="40">
-                    <VBtn type="submit" width="100%" height="100%" density="default">
+                    <VBtn :disabled="loading" type="submit" width="100%" height="100%" density="default">
                         Search
                     </VBtn>
                 </VCol>
