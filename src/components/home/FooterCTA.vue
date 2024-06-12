@@ -23,7 +23,7 @@ const navigate = () => {
       <VRow class="d-flex flex-column flex-md-column align-items-center">
         <VCol class="w-100 w-lg-66">
           <VCardTitle
-            class="text-lg-h3 text-h5 text-md-h4 font-weight-bold text-center text-lg-left"
+            class="text-lg-h3 text-h5 text-pre-wrap text-md-h4 font-weight-bold text-center text-lg-left pl-0"
           >
             List your business with Ease!
           </VCardTitle>
@@ -51,12 +51,16 @@ const navigate = () => {
   background: linear-gradient(
       to right,
       rgba(102, 204, 54, 0.582),
-      rgba(0, 0, 0, 0.3)
+      rgba(0, 0, 0, 0.8)
     ),
     url("../../assets/images/fill_form3.jpg") no-repeat center center;
   background-size: cover;
   border-radius: 10px;
   max-width: 100%;
+}
+
+.v-btn {
+  border-radius: 8px;
 }
 
 .v-card {
