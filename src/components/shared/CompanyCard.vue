@@ -15,7 +15,7 @@
         />
       </svg>
     </div>
-    <span>ethyellow.</span>
+    <span class="text-primary">ethyellow.</span>
   </div>
 </template>
 
@@ -39,7 +39,10 @@
   align-items: center;
 }
 
-.logo-wrapper span {
-  color: #dddf00;
+@media (max-width: 600px) {
+  .logo-wrapper {
+    scale: 0.8;
+    margin: 0;
+  }
 }
 </style>
