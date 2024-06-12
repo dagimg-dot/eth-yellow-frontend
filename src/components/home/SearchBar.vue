@@ -8,8 +8,10 @@ const CUR_LOCATION = "Current Location"
 
 const form = ref({
     location: 'Location',
-    searchQuery: '',
+    searchQuery: null,
 })
+
+const formRef = ref(null)
 
 const locationChoice = computed(() => form.value.location)
 
@@ -19,7 +21,13 @@ const mockLocations = ref([
     CUR_LOCATION, ...mockFetchedCityList.value
 ])
 
-const search = () => {
+const search = async () => {
+    const { valid } = await formRef.value.validate()
+
+    if (!valid) {
+        return
+    }
+
     console.log(form.value)
 }
 
@@ -58,19 +66,28 @@ const locateUser = async () => {
 
 const tags = ref(['Restaurant', 'Clinic', 'Pharmacy'])
 
+const locationRules = [
+    (v) => v !== 'Location' || 'Location is required',
+]
+
+const searchRules = [
+    (v) => !!v || 'Search query is required',
+]
+
 </script>
 
 <template>
     <VContainer class="search-wrapper pa-6">
-        <VForm class="d-flex ga-4" @submit.prevent="search">
+        <VForm class="d-flex ga-4" @submit.prevent="search" ref="formRef">
             <VRow>
                 <VCol cols="12" md="4">
                     <VCombobox v-model="form.location" :items="mockLocations" dense prepend-inner-icon="bx-map"
-                        :loading="loading" @click:prepend-inner="locateUser" label="Location" />
+                        :loading="loading" @click:prepend-inner="locateUser" label="Location" :rules="locationRules" />
                 </VCol>
                 <VCol cols="12" md="6">
-                    <VCombobox clearable chips label="Search" placeholder="What do you need . . ."
-                        prepend-inner-icon="bx-search" :items="tags"></VCombobox>
+                    <VCombobox v-model="form.searchQuery" clearable chips label="Search"
+                        placeholder="What do you need . . ." prepend-inner-icon="bx-search" :items="tags"
+                        :rules="searchRules" />
                 </VCol>
                 <VCol cols="12" md="2" width="40">
                     <VBtn :disabled="loading" type="submit" width="100%" height="100%" density="default">
