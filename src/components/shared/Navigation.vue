@@ -1,7 +1,7 @@
 <script setup>
 import { useAuthStore } from "@/store/auth";
 import { storeToRefs } from "pinia";
-import { onMounted, ref, watch, defineProps } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 
 const isXs = ref(false);
@@ -95,9 +95,12 @@ const props = defineProps({
           v-show="route.fullPath !== '/listings/add'"
           >Add Your Business</VBtn
         >
-        <VBtn v-if="!isLoggedIn" to="/auth/login" variant="elevated"
-          >Sign In</VBtn
-        >
+        <VBtn v-if="!isLoggedIn" to="/auth/login" variant="elevated">
+          Sign In
+        </VBtn>
+        <VAvatar>
+          <div>User</div>
+        </VAvatar>
       </div>
       <VAppBarNavIcon
         @click="drawer = !drawer"

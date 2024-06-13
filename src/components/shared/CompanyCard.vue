@@ -28,7 +28,6 @@
   gap: 12px;
   font-size: 1.5rem;
   font-weight: 700;
-  margin: 0 20px;
   cursor: pointer;
 }
 
