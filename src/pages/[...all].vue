@@ -8,14 +8,9 @@
     />
 
     <!-- 👉 Image -->
-    <div class="misc-avatar w-100 text-center">
-      <VImg
-        src="../assets/images/404.png"
-        alt="Coming Soon"
-        :max-width="500"
-        class="mx-auto"
-      />
-      <VBtn to="/" class="mt-10"> Back to Home </VBtn>
+    <div class="misc-avatar text-center d-flex flex-column align-center">
+      <img src="../assets/images/404.png" alt="404" class="mx-auto" />
+      <VBtn to="/" class="mt-10" max-width="200px"> Back to Home </VBtn>
     </div>
   </div>
 </template>
