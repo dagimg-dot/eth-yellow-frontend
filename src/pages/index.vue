@@ -5,7 +5,7 @@
     <VMain>
       <div class="hero">
         <VLayout max-width="1400px" class="mx-auto">
-          <Navigation />
+          <Navigation :isLanding="true" />
           <HomeSection />
         </VLayout>
       </div>
@@ -13,7 +13,6 @@
         <FooterCTA />
       </VLayout>
     </VMain>
-    <ScrollToTop />
   </VApp>
 </template>
 
