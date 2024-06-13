@@ -1,11 +1,13 @@
 <script setup>
 import { useAuthStore } from "@/store/auth";
 import { storeToRefs } from "pinia";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, defineProps } from "vue";
+import { useRoute } from "vue-router";
 
 const isXs = ref(false);
 const drawer = ref(null);
 const authStore = useAuthStore();
+const route = useRoute();
 const { isLoggedIn } = storeToRefs(authStore);
 
 const onResize = () => {
@@ -21,6 +23,14 @@ watch(isXs, () => {
   if (!isXs.value) {
     drawer.value = null;
   }
+});
+
+const props = defineProps({
+  isLanding: {
+    type: Boolean,
+    required: false,
+    default: false,
+  },
 });
 </script>
 
@@ -57,16 +67,18 @@ watch(isXs, () => {
         <VList class="text-end">
           <VDivider class="mb-2" />
           <VListItem>
-            <VBtn to="/auth/login" variant="elevated" block>Login</VBtn>
+            <VBtn to="/auth/login" variant="elevated" block>{{
+              isLoggedIn ? "Logout" : "Login"
+            }}</VBtn>
           </VListItem>
-          <VListItem>
+          <VListItem v-if="route.fullPath !== '/listings/add'">
             <VBtn variant="outlined" to="/listings/add">Add Your Business</VBtn>
           </VListItem>
         </VList>
       </VContainer>
     </VNavigationDrawer>
-    <VAppBar color="transparent" flat>
-      <CompanyCard class="animate-fade-in-right" />
+    <VAppBar :color="props.isLanding ? 'transparent' : 'grey-50'" flat>
+      <CompanyCard class="animate-fade-in-right" :reverse="props.isLanding" />
       <VSpacer />
       <nav v-if="!isXs" class="main-nav">
         <VBtn to="/">Home</VBtn>
@@ -76,7 +88,11 @@ watch(isXs, () => {
       </nav>
       <VSpacer />
       <div class="d-flex ga-6 px-4" v-if="!isXs">
-        <VBtn variant="outlined" to="/listings/add" class="animate-fade-in-left"
+        <VBtn
+          variant="outlined"
+          to="/listings/add"
+          class="animate-fade-in-left"
+          v-show="route.fullPath !== '/listings/add'"
           >Add Your Business</VBtn
         >
         <VBtn v-if="!isLoggedIn" to="/auth/login" variant="elevated"
@@ -95,6 +111,10 @@ watch(isXs, () => {
 
 <style scoped lang="scss">
 @use "@/scss/animation.scss" as *;
+
+.v-app-bar {
+  border-radius: 0 0 8px 8px;
+}
 
 .nav-drawer {
   background-color: rgba(0, 0, 0, 0.5);
