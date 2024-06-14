@@ -18,7 +18,6 @@
       <SearchBar class="animate-fade-in-top" />
     </VContainer>
   </section>
-  <
 </template>
 
 <style scoped lang="scss">
