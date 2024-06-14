@@ -40,9 +40,9 @@ export class ListingFormRules {
     (v) => v.length >= 3 || "City must be at least 3 characters",
   ];
 
-  stateRules = [
-    (v) => !!v || "State is required",
-    (v) => v.length >= 3 || "State must be 2 characters",
+  coordinatesRules = [
+    (v) => !!v || "Coordinates are required",
+    (v) => /^\d+(\.\d+)?$/.test(v) || "Coordinates must be a number",
   ];
 
   countryRules = [

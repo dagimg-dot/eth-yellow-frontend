@@ -27,14 +27,17 @@ const form = ref({
   description: "",
   phoneNumber: "",
   website: "",
+  isAddressFetched: false,
   address: "",
   city: "",
+  latitude: "",
+  longitude: "",
   categories: [],
   country: "",
   images: [],
 });
 
-const addressRef = computed(() => form.value.address);
+const isAddressFetchedRef = computed(() => form.value.isAddressFetched);
 
 const listingForm = ref(null);
 const tags = ref(["Restaurant", "Clinic", "Pharmacy"]);
@@ -55,11 +58,31 @@ const addBusiness = async () => {
 
 const { locate, result, loading, error, abort } = useReverseGeoCode();
 
+const getLocation = () => {
+  form.value.isAddressFetched = !form.value.isAddressFetched;
+};
+
+watch(isAddressFetchedRef, () => {
+  if (isAddressFetchedRef.value) {
+    locateUser(locate);
+  } else {
+    abort();
+    form.value.address = "";
+    form.value.city = "";
+    form.value.country = "";
+    form.value.longitude = "";
+    form.value.latitude = "";
+  }
+});
+
 watchEffect(() => {
   if (result.value) {
     form.value.address =
       result.value.address.road ||
       "Unable to find address, please enter manually";
+
+    form.value.latitude = result.value.lat;
+    form.value.longitude = result.value.lon;
 
     form.value.city =
       result.value.address.city ||
@@ -74,14 +97,6 @@ watchEffect(() => {
   if (error.value) {
     toast.error(error.value);
     error.value = null;
-  }
-});
-
-watch(addressRef, () => {
-  if (addressRef.value !== "") {
-    abort();
-  } else {
-    locateUser();
   }
 });
 </script>
@@ -137,11 +152,14 @@ watch(addressRef, () => {
       </VCol>
 
       <VCol cols="12" md="6">
+        <VCheckbox
+          v-model="form.remember"
+          label="Insert address based on your current location"
+          @click="getLocation"
+        />
         <VTextField
           v-model="form.address"
-          hint="Click on the map icon to fill your current location"
           prepend-inner-icon="mdi-map-marker"
-          @click:prepend-inner="locateUser(locate)"
           :loading="loading"
           label="Address"
           placeholder="Namibia Street"
@@ -149,10 +167,11 @@ watch(addressRef, () => {
         />
       </VCol>
 
-      <VCol cols="12" md="6">
+      <VCol cols="12" md="6" class="d-flex align-end">
         <VTextField
           v-model="form.city"
           prepend-inner-icon="mdi-city"
+          :loading="loading"
           label="City"
           placeholder="Addis Ababa"
           :rules="ListingRules.cityRules"
@@ -161,8 +180,29 @@ watch(addressRef, () => {
 
       <VCol cols="12" md="6">
         <VTextField
+          v-model="form.latitude"
+          prepend-inner-icon="mdi-latitude"
+          :loading="loading"
+          label="Latitude"
+          :rules="ListingRules.coordinatesRules"
+        />
+      </VCol>
+
+      <VCol cols="12" md="6">
+        <VTextField
+          v-model="form.longitude"
+          prepend-inner-icon="mdi-longitude"
+          :loading="loading"
+          label="Longitude"
+          :rules="ListingRules.coordinatesRules"
+        />
+      </VCol>
+
+      <VCol cols="12" md="6">
+        <VTextField
           v-model="form.country"
           prepend-inner-icon="mdi-earth"
+          :loading="loading"
           label="Country"
           placeholder="Ethiopia"
           :rules="ListingRules.countryRules"
