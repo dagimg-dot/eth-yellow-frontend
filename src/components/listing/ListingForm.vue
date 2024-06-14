@@ -46,7 +46,7 @@ const resetForm = () => {
 const addBusiness = async () => {
   const { valid } = await listingForm.value.validate();
 
-  if (!valid) {
+  if (!valid || form.value.categories.length === 0) {
     return;
   }
 
@@ -180,6 +180,7 @@ watch(addressRef, () => {
           prepend-inner-icon="mdi-category"
           multiple
           :items="tags"
+          :rules="ListingRules.categoryRules"
         />
       </VCol>
 

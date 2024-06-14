@@ -54,6 +54,8 @@ export class ListingFormRules {
     (v) => !!v || "Postal Code is required",
     (v) => /^\d+$/.test(v) || "Postal Code must be a number",
   ];
+
+  categoryRules = [(v) => v.length !== 0 || "Category is required"];
 }
 
 export default new ListingFormRules();
