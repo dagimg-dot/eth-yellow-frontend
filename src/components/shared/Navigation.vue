@@ -87,18 +87,25 @@ const props = defineProps({
         <VBtn to="/contact">Contact</VBtn>
       </nav>
       <VSpacer />
-      <div class="d-flex ga-6 px-4" v-if="!isXs">
+      <div class="d-flex ga-4 pr-4 align-center" v-if="!isXs">
         <VBtn
           variant="outlined"
           to="/listings/add"
           class="animate-fade-in-left"
           v-show="route.fullPath !== '/listings/add'"
-          >Add Your Business</VBtn
         >
-        <VBtn v-if="!isLoggedIn" to="/auth/login" variant="elevated">
+          Add Your Business
+        </VBtn>
+
+        <VBtn
+          v-if="!isLoggedIn"
+          to="/auth/login"
+          variant="elevated"
+          class="animate-fade-in-left"
+        >
           Sign In
         </VBtn>
-        <VAvatar>
+        <VAvatar v-if="isLoggedIn" class="animate-fade-in-left">
           <div>User</div>
         </VAvatar>
       </div>
