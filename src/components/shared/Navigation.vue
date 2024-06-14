@@ -3,6 +3,7 @@ import { useAuthStore } from "@/store/auth";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
+import { toast } from "vue3-toastify";
 
 const isXs = ref(false);
 const drawer = ref(null);
@@ -32,6 +33,13 @@ const props = defineProps({
     default: false,
   },
 });
+
+const authenticate = () => {
+  if (isLoggedIn.value) {
+    authStore.logout();
+    toast.success("Logout successful");
+  }
+};
 </script>
 
 <template>
@@ -67,9 +75,13 @@ const props = defineProps({
         <VList class="text-end">
           <VDivider class="mb-2" />
           <VListItem>
-            <VBtn to="/auth/login" variant="elevated" block>{{
-              isLoggedIn ? "Logout" : "Login"
-            }}</VBtn>
+            <VBtn
+              to="/auth/login"
+              variant="elevated"
+              block
+              @click="authenticate"
+              >{{ isLoggedIn ? "Logout" : "Login" }}</VBtn
+            >
           </VListItem>
           <VListItem v-if="route.fullPath !== '/listings/add'">
             <VBtn variant="outlined" to="/listings/add">Add Your Business</VBtn>
@@ -103,7 +115,7 @@ const props = defineProps({
           variant="elevated"
           class="animate-fade-in-left"
         >
-          Sign In
+          Login
         </VBtn>
         <VAvatar v-if="isLoggedIn" class="animate-fade-in-left">
           <div>User</div>
