@@ -10,10 +10,9 @@ import { ApolloClients } from "@vue/apollo-composable";
 import VueDOMPurifyHTML from "vue-dompurify-html";
 import Vue3Toastify from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-import { createPinia } from "pinia";
+import { pinia } from "@/store";
 
 const app = createApp(App);
-const pinia = createPinia();
 
 app
   .use(router)
