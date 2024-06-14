@@ -6,13 +6,15 @@ export const useAuthStore = defineStore("auth", () => {
   const user = ref(null);
   const isLoggedIn = computed(() => token.value !== null);
 
-  function login(token, user) {
-    localStorage.setItem("session", token);
+  function login(accessToken, user) {
+    token.value = accessToken;
+    localStorage.setItem("session", accessToken);
     user.value = user;
   }
 
   function logout() {
     localStorage.removeItem("session");
+    token.value = null;
     user.value = null;
   }
 
