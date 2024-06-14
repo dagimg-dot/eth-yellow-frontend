@@ -29,7 +29,7 @@ const form = ref({
   website: "",
   address: "",
   city: "",
-  state: "",
+  categories: [],
   country: "",
   images: [],
 });
@@ -37,6 +37,7 @@ const form = ref({
 const addressRef = computed(() => form.value.address);
 
 const listingForm = ref(null);
+const tags = ref(["Restaurant", "Clinic", "Pharmacy"]);
 
 const resetForm = () => {
   form.value = {};
@@ -68,11 +69,6 @@ watchEffect(() => {
     form.value.country =
       result.value.address.country ||
       "Unable to find country, please enter manually";
-
-    form.value.state =
-      result.value.address.state_district ||
-      result.value.address.state ||
-      "Unable to find state, please enter manually";
   }
 
   if (error.value) {
@@ -165,21 +161,25 @@ watch(addressRef, () => {
 
       <VCol cols="12" md="6">
         <VTextField
-          v-model="form.state"
-          prepend-inner-icon="mdi-city-variant"
-          label="State"
-          placeholder="Amhara"
-          :rules="ListingRules.stateRules"
-        />
-      </VCol>
-
-      <VCol cols="12" md="6">
-        <VTextField
           v-model="form.country"
           prepend-inner-icon="mdi-earth"
           label="Country"
           placeholder="Ethiopia"
           :rules="ListingRules.countryRules"
+        />
+      </VCol>
+
+      <VCol cols="12" md="6">
+        <VCombobox
+          v-model="form.categories"
+          clearable
+          chips
+          label="Categories"
+          placeholder="Choose a category . . ."
+          hint="Select multiple categories by typing and selecting from the list"
+          prepend-inner-icon="mdi-category"
+          multiple
+          :items="tags"
         />
       </VCol>
 
