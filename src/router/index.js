@@ -9,6 +9,7 @@ const routes = setupLayouts(generatedRoutes);
 const history = createWebHistory();
 
 const AUTH_ROUTES = ["/auth/login", "/auth/signup"];
+const GUARDED_ROUTES = ["/listings/add", "/listings/edit"];
 
 const router = createRouter({
   history,
@@ -25,6 +26,12 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   const { isLoggedIn } = storeToRefs(authStore);
+
+  if (!isLoggedIn.value && GUARDED_ROUTES.includes(to.path)) {
+    toast.error("You need to be logged in to access this page!");
+    next("/auth/login");
+  }
+
   if (isLoggedIn.value && AUTH_ROUTES.includes(to.path)) {
     toast.info("You are already logged in!");
     next(from.path);
