@@ -1,6 +1,6 @@
 <script setup>
 import { useRouter } from "vue-router";
-import { useAuthStore } from "@/store/auth";
+import { useAuthStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
 import { toast } from "vue3-toastify";
 const router = useRouter();

@@ -1,5 +1,5 @@
 <script setup>
-import { useAuthStore } from "@/store/auth";
+import { useAuthStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
@@ -142,5 +142,8 @@ const authenticate = () => {
   background-color: rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(5px);
   color: #dddf00;
+  position: absolute;
+  top: 0;
+  right: 0;
 }
 </style>

@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { useLogin } from "@/composables/login";
 import { useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
-import { useAuthStore } from "@/store/auth";
+import { useAuthStore } from "@/store/modules/auth";
 
 const authStore = useAuthStore();
 

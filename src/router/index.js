@@ -2,7 +2,7 @@ import { createWebHistory, createRouter } from "vue-router";
 import { setupLayouts } from "virtual:generated-layouts";
 import generatedRoutes from "virtual:generated-pages";
 import { toast } from "vue3-toastify";
-import { useAuthStore } from "@/store/auth";
+import { useAuthStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
 
 const routes = setupLayouts(generatedRoutes);

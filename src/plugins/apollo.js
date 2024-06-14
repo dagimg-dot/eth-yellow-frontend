@@ -6,7 +6,7 @@ import {
 import { onError } from "@apollo/client/link/error";
 import router from "@/router";
 import { ApolloLink, from } from "apollo-link";
-import { useAuthStore } from "@/store/auth";
+import { useAuthStore } from "@/store/modules/auth";
 import { toast } from "vue3-toastify";
 import { storeToRefs } from "pinia";
 
