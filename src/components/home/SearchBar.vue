@@ -2,7 +2,7 @@
 import { computed, ref, watch, watchEffect } from "vue";
 import { toast } from "vue3-toastify";
 import { useReverseGeoCode } from "@/composables/reverseGeoCode";
-import { getCurrentPosition } from "@/utils/geoLocation";
+import { locateUser } from "@/utils/geoLocation";
 
 const CUR_LOCATION = "Current Location";
 
@@ -51,16 +51,6 @@ watchEffect(() => {
   }
 });
 
-const locateUser = async () => {
-  try {
-    const { coords } = await getCurrentPosition();
-
-    await locate(coords.latitude, coords.longitude);
-  } catch (error) {
-    toast.error("Failed to locate user");
-  }
-};
-
 const tags = ref(["Restaurant", "Clinic", "Pharmacy"]);
 
 const locationRules = [(v) => v !== "Location" || "Location is required"];
@@ -79,7 +69,7 @@ const searchRules = [(v) => !!v || "Search query is required"];
             dense
             prepend-inner-icon="bx-map"
             :loading="loading"
-            @click:prepend-inner="locateUser"
+            @click:prepend-inner="locateUser(locate)"
             label="Location"
             :rules="locationRules"
           />
