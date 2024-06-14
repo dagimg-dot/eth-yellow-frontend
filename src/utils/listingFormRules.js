@@ -53,7 +53,6 @@ export class ListingFormRules {
   postalCodeRules = [
     (v) => !!v || "Postal Code is required",
     (v) => /^\d+$/.test(v) || "Postal Code must be a number",
-    (v) => v.length === 4 || "Postal Code must be 4 characters",
   ];
 }
 
