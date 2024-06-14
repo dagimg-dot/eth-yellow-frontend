@@ -49,7 +49,7 @@ const signupHandler = async () => {
 
   if (result.value && result.value.success) {
     toast.success(
-      result.value.message + " You are begin redirected to the login page"
+      result.value.message + " You are being redirected to the login page"
     );
     router.push("/auth/login");
   }
