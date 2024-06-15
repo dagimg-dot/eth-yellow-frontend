@@ -3,6 +3,8 @@ import { computed, ref, watch, watchEffect } from "vue";
 import { toast } from "vue3-toastify";
 import { useReverseGeoCode } from "@/composables/reverseGeoCode";
 import { locateUser } from "@/utils/geoLocation";
+import GET_CATEGORIES from "@/graphql/queries/getCategories.gql";
+import { useLazyQuery } from "@vue/apollo-composable";
 
 const CUR_LOCATION = "Current Location";
 
@@ -10,6 +12,15 @@ const form = ref({
   location: "Location",
   searchQuery: null,
 });
+
+// Fetch categories
+const {
+  load: fetchCategories,
+  result: categoryResult,
+  loading: categoryLoading,
+} = useLazyQuery(GET_CATEGORIES);
+
+const categories = computed(() => categoryResult.value?.categories || []);
 
 const formRef = ref(null);
 
@@ -82,7 +93,9 @@ const searchRules = [(v) => !!v || "Search query is required"];
             label="Search"
             placeholder="What do you need . . ."
             prepend-inner-icon="bx-search"
-            :items="tags"
+            :loading="categoryLoading"
+            @focus="fetchCategories()"
+            :items="categories.map((category) => category.name)"
             :rules="searchRules"
           />
         </VCol>

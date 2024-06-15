@@ -1,0 +1,6 @@
+  query {
+    categories {
+      category_id
+      name
+    }
+  }

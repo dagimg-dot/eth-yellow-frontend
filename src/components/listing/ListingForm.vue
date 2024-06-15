@@ -4,6 +4,8 @@ import ListingRules from "@/utils/listingFormRules";
 import { useReverseGeoCode } from "@/composables/reverseGeoCode";
 import { locateUser } from "@/utils/geoLocation";
 import { toast } from "vue3-toastify";
+import { useLazyQuery } from "@vue/apollo-composable";
+import GET_CATEGORIES from "@/graphql/queries/getCategories.gql";
 
 const props = defineProps({
   business: {
@@ -40,7 +42,15 @@ const form = ref({
 const isAddressFetchedRef = computed(() => form.value.isAddressFetched);
 
 const listingForm = ref(null);
-const tags = ref(["Restaurant", "Clinic", "Pharmacy"]);
+
+// Fetch categories
+const {
+  load: fetchCategories,
+  result: categoryResult,
+  loading: categoryLoading,
+} = useLazyQuery(GET_CATEGORIES);
+
+const categories = computed(() => categoryResult.value?.categories || []);
 
 const resetForm = () => {
   form.value = {};
@@ -236,10 +246,12 @@ watchEffect(() => {
           chips
           label="Categories"
           placeholder="Choose a category . . ."
-            hint="You can select multiple categories by typing and selecting from the list"
+          hint="You can select multiple categories by typing and selecting from the list"
           prepend-inner-icon="mdi-category"
+          :loading="categoryLoading"
+          :items="categories.map((category) => category.name)"
+          @focus="fetchCategories()"
           multiple
-          :items="tags"
           :rules="ListingRules.categoryRules"
         />
       </VCol>
@@ -254,8 +266,4 @@ watchEffect(() => {
   </VForm>
 </template>
 
-<style scoped>
-.prepend-inner-icon {
-  cursor: pointer;
-}
-</style>
+<style scoped></style>
