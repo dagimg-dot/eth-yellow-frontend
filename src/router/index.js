@@ -30,6 +30,7 @@ router.beforeEach((to, from, next) => {
   if (!isLoggedIn.value && GUARDED_ROUTES.includes(to.path)) {
     toast.error("You need to be logged in to access this page!");
     next("/auth/login");
+    return;
   }
 
   if (isLoggedIn.value && AUTH_ROUTES.includes(to.path)) {
