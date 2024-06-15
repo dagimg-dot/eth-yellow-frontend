@@ -22,7 +22,7 @@ app
   })
   .use(vuetify)
   .use(Vue3Toastify, {
-    autoClose: 3000,
+    autoClose: 2000,
     clearOnUrlChange: false,
   })
   .use(VueDOMPurifyHTML)
