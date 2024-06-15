@@ -18,7 +18,11 @@ const {
   load: fetchCategories,
   result: categoryResult,
   loading: categoryLoading,
-} = useLazyQuery(GET_CATEGORIES);
+} = useLazyQuery(GET_CATEGORIES, null, {
+  context: {
+    authRequired: false,
+  },
+});
 
 const categories = computed(() => categoryResult.value?.categories || []);
 

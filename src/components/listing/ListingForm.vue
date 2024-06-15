@@ -48,9 +48,20 @@ const {
   load: fetchCategories,
   result: categoryResult,
   loading: categoryLoading,
-} = useLazyQuery(GET_CATEGORIES);
+  error: categoryError,
+} = useLazyQuery(GET_CATEGORIES, null, {
+  context: {
+    authRequired: false,
+  },
+});
 
-const categories = computed(() => categoryResult.value?.categories || []);
+const categories = computed(() => categoryResult.value?.categories ?? []);
+
+const getCategories = async () => {
+  try {
+    await fetchCategories();
+  } catch (error) {}
+};
 
 const resetForm = () => {
   form.value = {};
@@ -248,9 +259,10 @@ watchEffect(() => {
           placeholder="Choose a category . . ."
           hint="You can select multiple categories by typing and selecting from the list"
           prepend-inner-icon="mdi-category"
+          :error="!!categoryError"
           :loading="categoryLoading"
           :items="categories.map((category) => category.name)"
-          @focus="fetchCategories()"
+          @focus="getCategories()"
           multiple
           :rules="ListingRules.categoryRules"
         />
