@@ -1,0 +1,39 @@
+mutation AddBusiness(
+  $owner_id: uuid!
+  $name: name!
+  $description: String!
+  $email: String!
+  $phone_number: String!
+  $website: String!
+  $address: name!
+  $city: name!
+  $longitude: String!
+  $latitude: String!
+  $country: name!
+  $postal_code: Int!
+  $categoryIds: [business_categories_insert_input!]!
+) {
+  insert_businesses_one(
+    object: {
+      owner_id: $owner_id
+      name: $name
+      description: $description
+      contact_details: {
+        data: { email: $email, phone_number: $phone_number, website: $website }
+      }
+      locations: {
+        data: {
+          address: $address
+          city: $city
+          longitude: $longitude
+          latitude: $latitude
+          country: $country
+          postal_code: $postal_code
+        }
+      }
+      business_categories: { data: $categoryIds }
+    }
+  ) {
+    business_id
+  }
+}

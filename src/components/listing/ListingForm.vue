@@ -6,6 +6,9 @@ import { locateUser } from "@/utils/geoLocation";
 import { toast } from "vue3-toastify";
 import { useLazyQuery } from "@vue/apollo-composable";
 import GET_CATEGORIES from "@/graphql/queries/getCategories.gql";
+import { useListingStore } from "@/store/modules/listingStore";
+import { useAuthStore } from "@/store/modules/auth";
+import { storeToRefs } from "pinia";
 
 const props = defineProps({
   business: {
@@ -34,6 +37,7 @@ const form = ref({
   city: "",
   latitude: "",
   longitude: "",
+  postalCode: "",
   categories: [],
   country: "",
   images: [],
@@ -63,8 +67,26 @@ const getCategories = async () => {
   } catch (error) {}
 };
 
+const {
+  addListing,
+  loading: createLoading,
+  error: createError,
+  listing,
+} = useListingStore();
+
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
+
 const resetForm = () => {
   form.value = {};
+};
+
+const getChoosenCategoriesID = () => {
+  return categories.value
+    .filter((category) => form.value.categories.includes(category.name))
+    .map((category) => ({
+      category_id: category.category_id,
+    }));
 };
 
 const addBusiness = async () => {
@@ -74,7 +96,19 @@ const addBusiness = async () => {
     return;
   }
 
-  console.log(form.value);
+  const business = {
+    owner_id: user.value.user_id,
+    ...form.value,
+    categories: getChoosenCategoriesID(),
+  };
+
+  console.log(business);
+
+  if (isEditMode) {
+    // Update business
+  } else {
+    await addListing(business);
+  }
 };
 
 const { locate, result, loading, error, abort } = useReverseGeoCode();
@@ -272,7 +306,9 @@ watchEffect(() => {
         <VBtn type="reset" color="secondary" variant="tonal" @click="resetForm">
           Reset
         </VBtn>
-        <VBtn type="submit"> {{ isEditMode ? "Update" : "Publish" }} </VBtn>
+        <VBtn type="submit" :loading="createLoading">
+          {{ isEditMode ? "Update" : "Publish" }}
+        </VBtn>
       </VCol>
     </VRow>
   </VForm>
