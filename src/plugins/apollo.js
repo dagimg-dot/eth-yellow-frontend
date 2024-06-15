@@ -56,8 +56,18 @@ const defaultAuthLink = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
+const conditionalAuthLink = new ApolloLink((operation, forward) => {
+  const { authRequired } = operation.getContext();
+
+  if (authRequired == true || authRequired == undefined) {
+    return defaultAuthLink.request(operation, forward);
+  } else {
+    return forward(operation);
+  }
+});
+
 const defaultApolloClient = new ApolloClient({
-  link: from([defaultAuthLink, defaultErrorLink, defaultHttpLink]),
+  link: from([conditionalAuthLink, defaultErrorLink, defaultHttpLink]),
   cache,
 });
 
