@@ -158,6 +158,7 @@ watchEffect(() => {
           @click="getLocation"
         />
         <VTextField
+          class="mt-4"
           v-model="form.address"
           prepend-inner-icon="mdi-map-marker"
           :loading="loading"
@@ -210,17 +211,12 @@ watchEffect(() => {
       </VCol>
 
       <VCol cols="12" md="6">
-        <VCombobox
-          v-model="form.categories"
-          clearable
-          chips
-          label="Categories"
-          placeholder="Choose a category . . ."
-          hint="Select multiple categories by typing and selecting from the list"
-          prepend-inner-icon="mdi-category"
-          multiple
-          :items="tags"
-          :rules="ListingRules.categoryRules"
+        <VTextField
+          v-model="form.postalCode"
+          prepend-inner-icon="mdi-mailbox"
+          label="Postal Code"
+          placeholder="6003"
+          :rules="ListingRules.postalCodeRules"
         />
       </VCol>
 
@@ -234,20 +230,25 @@ watchEffect(() => {
       </VCol>
 
       <VCol cols="12" md="6">
-        <VTextField
-          v-model="form.postalCode"
-          prepend-inner-icon="mdi-mailbox"
-          label="Postal Code"
-          placeholder="6003"
-          :rules="ListingRules.postalCodeRules"
+        <VCombobox
+          v-model="form.categories"
+          clearable
+          chips
+          label="Categories"
+          placeholder="Choose a category . . ."
+            hint="You can select multiple categories by typing and selecting from the list"
+          prepend-inner-icon="mdi-category"
+          multiple
+          :items="tags"
+          :rules="ListingRules.categoryRules"
         />
       </VCol>
 
-      <VCol cols="12" class="d-flex ga-4">
-        <VBtn type="submit"> {{ isEditMode ? "Update" : "Publish" }} </VBtn>
+      <VCol cols="12" class="d-flex ga-4 justify-end">
         <VBtn type="reset" color="secondary" variant="tonal" @click="resetForm">
           Reset
         </VBtn>
+        <VBtn type="submit"> {{ isEditMode ? "Update" : "Publish" }} </VBtn>
       </VCol>
     </VRow>
   </VForm>
