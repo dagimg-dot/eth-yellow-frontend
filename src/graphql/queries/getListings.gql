@@ -1,0 +1,10 @@
+query GetListings {
+  businesses {
+    name
+    description
+    locations {
+      city
+      country
+    }
+  }
+}
