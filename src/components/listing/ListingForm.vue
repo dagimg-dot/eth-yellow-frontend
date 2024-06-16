@@ -4,48 +4,91 @@ import ListingRules from "@/utils/listingFormRules";
 import { useReverseGeoCode } from "@/composables/reverseGeoCode";
 import { locateUser } from "@/utils/geoLocation";
 import { toast } from "vue3-toastify";
-import { useLazyQuery } from "@vue/apollo-composable";
+import { useLazyQuery, useMutation } from "@vue/apollo-composable";
 import GET_CATEGORIES from "@/graphql/queries/getCategories.gql";
-import { useListingStore } from "@/store/modules/listingStore";
 import { useAuthStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
+import CREATE_LISTING_MUTATION from "@/graphql/mutations/createListing.gql";
+import { parseErrorMessage } from "@/utils/errorParser";
 
 const props = defineProps({
   business: {
-    businessId: {
+    business_id: {
       type: String,
     },
-    businessName: {
+    name: {
       type: String,
     },
-    businessEmail: {
+    email: {
       type: String,
+    },
+    description: {
+      type: String,
+    },
+    phone_number: {
+      type: String,
+    },
+    website: {
+      type: String,
+    },
+    address: {
+      type: String,
+    },
+    city: {
+      type: String,
+    },
+    latitude: {
+      type: String,
+    },
+    longitude: {
+      type: String,
+    },
+    postal_code: {
+      type: String,
+    },
+    categories: {
+      type: Array,
     },
   },
 });
 
-const isEditMode = props.business?.businessId !== undefined;
+const isEditMode = props.business?.business_id !== undefined;
 
 const form = ref({
-  businessName: props.business?.businessName || "",
-  businessEmail: props.business?.businessEmail || "",
-  description: "",
-  phoneNumber: "",
-  website: "",
+  name: props.business?.name || "",
+  email: props.business?.email || "",
+  description: props.business?.description || "",
+  phone_number: props.business?.phone_number || "",
+  website: props.business?.website || "",
   isAddressFetched: false,
-  address: "",
-  city: "",
-  latitude: "",
-  longitude: "",
-  postalCode: "",
-  categories: [],
-  country: "",
-  images: [],
+  address: props.business?.address || "",
+  city: props.business?.city || "",
+  latitude: props.business?.latitude || "",
+  longitude: props.business?.longitude || "",
+  postal_code: props.business?.postal_code || "",
+  categories: props.business?.categories || [],
+  country: props.business?.country || "",
+  images: props.business?.images || [],
 });
 
 const isAddressFetchedRef = computed(() => form.value.isAddressFetched);
 
 const listingForm = ref(null);
+
+const authStore = useAuthStore();
+const { user } = storeToRefs(authStore);
+
+const resetForm = () => {
+  form.value = {};
+};
+
+const getChoosenCategoriesID = () => {
+  return categories.value
+    .filter((category) => form.value.categories.includes(category.name))
+    .map((category) => ({
+      category_id: category.category_id,
+    }));
+};
 
 // Fetch categories
 const {
@@ -68,26 +111,25 @@ const getCategories = async () => {
 };
 
 const {
-  addListing,
+  mutate: addListing,
   loading: createLoading,
-  error: createError,
-  listing,
-} = useListingStore();
+  onError: onCreateError,
+  onDone: onCreateDone,
+} = useMutation(CREATE_LISTING_MUTATION, {
+  context: {
+    authRequired: true,
+  },
+});
 
-const authStore = useAuthStore();
-const { user } = storeToRefs(authStore);
+onCreateError((error) => {
+  const parsedError = parseErrorMessage(error.message);
+  toast.error(parsedError);
+});
 
-const resetForm = () => {
-  form.value = {};
-};
-
-const getChoosenCategoriesID = () => {
-  return categories.value
-    .filter((category) => form.value.categories.includes(category.name))
-    .map((category) => ({
-      category_id: category.category_id,
-    }));
-};
+onCreateDone(() => {
+  toast.success("Business added successfully");
+  resetForm();
+});
 
 const addBusiness = async () => {
   const { valid } = await listingForm.value.validate();
@@ -99,7 +141,7 @@ const addBusiness = async () => {
   const business = {
     owner_id: user.value.user_id,
     ...form.value,
-    categories: getChoosenCategoriesID(),
+    categoryIds: getChoosenCategoriesID(),
   };
 
   console.log(business);
@@ -161,7 +203,7 @@ watchEffect(() => {
     <VRow>
       <VCol cols="12" md="6">
         <VTextField
-          v-model="form.businessName"
+          v-model="form.name"
           prepend-inner-icon="bx-building"
           label="Business Name"
           placeholder="Burger Factory"
@@ -171,7 +213,7 @@ watchEffect(() => {
 
       <VCol cols="12" md="6">
         <VTextField
-          v-model="form.businessEmail"
+          v-model="form.email"
           prepend-inner-icon="mdi-email"
           label="Business Email"
           type="email"
@@ -185,13 +227,13 @@ watchEffect(() => {
           prepend-inner-icon="bx-message-square-detail"
           label="Description"
           placeholder="brief description about the business"
-          :rules="ListingRules.descriptionRules"
+          :rules="ListingRules.phone_number"
         />
       </VCol>
 
       <VCol cols="12" md="6" class="d-flex flex-column ga-4">
         <VTextField
-          v-model="form.phoneNumber"
+          v-model="form.phone_number"
           prepend-inner-icon="bx-phone"
           label="Phone Number"
           placeholder="09........"
@@ -208,7 +250,7 @@ watchEffect(() => {
 
       <VCol cols="12" md="6">
         <VCheckbox
-          v-model="form.remember"
+          v-model="form.isAddressFetched"
           label="Insert address based on your current location"
           @click="getLocation"
         />
@@ -267,7 +309,7 @@ watchEffect(() => {
 
       <VCol cols="12" md="6">
         <VTextField
-          v-model="form.postalCode"
+          v-model="form.postal_code"
           prepend-inner-icon="mdi-mailbox"
           label="Postal Code"
           placeholder="6003"
