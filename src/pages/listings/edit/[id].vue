@@ -1,8 +1,13 @@
 <script setup>
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+console.log(route.params.id);
+
 const formObjFromAPI = {
-  businessId: "2l34hl2k-23l4jl2-2j34l2jk",
-  businessName: "The Club",
-  businessEmail: "the.club@gmail.com",
+  business_id: route.params.id,
+  name: "The Club",
+  email: "the.club@gmail.com",
 };
 </script>
 
