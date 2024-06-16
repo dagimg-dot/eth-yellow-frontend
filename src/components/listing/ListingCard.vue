@@ -1,8 +1,10 @@
 <script setup>
 import avatar from "../../assets/images/fill_form3.jpg";
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 
 const isLiked = ref(false);
+const router = useRouter();
 
 const trimText = (text, length) => {
   return text.length > length ? `${text.slice(0, length)}...` : text;
@@ -10,6 +12,9 @@ const trimText = (text, length) => {
 
 const props = defineProps({
   listing: {
+    business_id: {
+      type: String,
+    },
     name: {
       type: String,
     },
@@ -22,11 +27,15 @@ const props = defineProps({
     type: Boolean,
   },
 });
+
+const goToDetialsPage = () => {
+  router.push(`/listings/${props.listing.business_id}`);
+};
 </script>
 
 <template>
   <VSkeletonLoader :loading="props.loading" type="image, article">
-    <VCard class="w-100">
+    <VCard class="w-100 cursor-pointer" @click="goToDetialsPage">
       <VImg :src="avatar" height="200px" cover />
 
       <VCardItem>
