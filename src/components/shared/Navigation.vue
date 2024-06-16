@@ -89,8 +89,12 @@ const authenticate = () => {
         </VList>
       </VContainer>
     </VNavigationDrawer>
-    <VAppBar :color="props.isLanding ? 'transparent' : 'grey-50'" flat>
-      <CompanyCard class="animate-fade-in-right" :reverse="props.isLanding" />
+    <VAppBar
+      :color="props.isLanding ? 'transparent' : 'grey-50'"
+      flat
+      class="rounded-t-0 rounded-b-lg"
+    >
+      <CompanyCard class="animate-fade-in-right" />
       <VSpacer />
       <nav v-if="!isXs" class="main-nav">
         <VBtn to="/">Home</VBtn>
@@ -99,7 +103,7 @@ const authenticate = () => {
         <VBtn to="/contact">Contact</VBtn>
       </nav>
       <VSpacer />
-      <div class="d-flex ga-6 pr-6 align-center" v-if="!isXs">
+      <div class="d-flex ga-6 align-center" v-if="!isXs">
         <VBtn
           variant="outlined"
           to="/listings/add"
@@ -117,7 +121,7 @@ const authenticate = () => {
         >
           Login
         </VBtn>
-        <UserProfile />
+        <UserProfile class="animate-fade-in-left" />
       </div>
       <VAppBarNavIcon
         @click="drawer = !drawer"
@@ -131,10 +135,6 @@ const authenticate = () => {
 
 <style scoped lang="scss">
 @use "@/scss/animation.scss" as *;
-
-.v-app-bar {
-  border-radius: 0 0 8px 8px;
-}
 
 .nav-drawer {
   background-color: rgba(0, 0, 0, 0.5);
