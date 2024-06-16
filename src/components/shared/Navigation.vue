@@ -99,7 +99,7 @@ const authenticate = () => {
         <VBtn to="/contact">Contact</VBtn>
       </nav>
       <VSpacer />
-      <div class="d-flex ga-4 pr-4 align-center" v-if="!isXs">
+      <div class="d-flex ga-6 pr-6 align-center" v-if="!isXs">
         <VBtn
           variant="outlined"
           to="/listings/add"
@@ -117,9 +117,7 @@ const authenticate = () => {
         >
           Login
         </VBtn>
-        <VAvatar v-if="isLoggedIn" class="animate-fade-in-left">
-          <div>User</div>
-        </VAvatar>
+        <UserProfile />
       </div>
       <VAppBarNavIcon
         @click="drawer = !drawer"
