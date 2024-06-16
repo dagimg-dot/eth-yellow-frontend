@@ -1,4 +1,4 @@
-  query {
+  query GetCategories {
     categories {
       category_id
       name
