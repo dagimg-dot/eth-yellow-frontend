@@ -54,7 +54,7 @@ const logout = () => {
           </VListItem>
           <VDivider class="my-2" />
 
-          <VListItem link>
+          <VListItem link :to="`/user/${user.user_id}`">
             <template #prepend>
               <VIcon class="me-2" icon="bx-user" size="22" />
             </template>
@@ -68,6 +68,15 @@ const logout = () => {
             </template>
 
             <VListItemTitle>My Business</VListItemTitle>
+          </VListItem>
+
+
+          <VListItem link>
+            <template #prepend>
+              <VIcon class="me-2" icon="gis-poi-favorite" size="22" />
+            </template>
+
+            <VListItemTitle>Favorites</VListItemTitle>
           </VListItem>
 
           <VDivider class="my-2" />
