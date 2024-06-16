@@ -1,10 +1,8 @@
 <template>
   <VApp>
     <VMain>
-      <VLayout max-width="1400px" class="mx-auto" height="80">
-        <Navigation :isLanding="false" />
-      </VLayout>
-      <VLayout max-width="1400px" class="mx-auto">
+      <Navigation :isLanding="false" />
+      <VLayout max-width="1400px" class="mx-auto pa-6 pa-lg-0 mt-6">
         <RouterView />
       </VLayout>
     </VMain>
