@@ -1,0 +1,11 @@
+query GetUserBusiness($owner_id: uuid!) {
+  businesses(where: { owner_id: { _eq: $owner_id } }) {
+    business_id
+    name
+    description
+    locations {
+      city
+      country
+    }
+  }
+}
