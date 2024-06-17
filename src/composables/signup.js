@@ -38,6 +38,7 @@ export function useSignup() {
         password,
         first_name: "",
         last_name: "",
+        phone_number: ""
       });
       const { signup: signupData } = response.data;
       if (signupData.errors.length > 0) {
