@@ -34,7 +34,11 @@ onListingError((error) => {
 <template>
   <VRow>
     <VCol lg="4" sm="6" cols="12" v-for="listing in listings">
-      <ListingCard :listing="listing" :loading="listingLoading" />
+      <ListingCard
+        :listing="listing"
+        :loading="listingLoading"
+        :isListing="false"
+      />
     </VCol>
   </VRow>
 </template>

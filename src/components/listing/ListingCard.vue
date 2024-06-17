@@ -26,6 +26,9 @@ const props = defineProps({
   loading: {
     type: Boolean,
   },
+  isListing: {
+    type: Boolean,
+  },
 });
 
 const goToDetialsPage = (ev) => {
@@ -49,7 +52,7 @@ const goToDetialsPage = (ev) => {
         <VCardTitle>{{ props.listing.name }}</VCardTitle>
       </VCardItem>
 
-      <VCardText class="d-flex flex-column ga-2">
+      <VCardText class="d-flex flex-column ga-2 w-100">
         <div class="d-flex justify-space-between align-center">
           <div class="d-flex ga-4 flex-column">
             <p class="font-weight-medium text-base d-flex ga-1 align-center">
@@ -62,7 +65,16 @@ const goToDetialsPage = (ev) => {
               {{ trimText(props.listing.description, 90) }}
             </p>
           </div>
+          <div v-if="!isListing" class="d-flex flex-column">
+            <VBtn
+              icon="bx-edit"
+              variant="text"
+              :to="`/listings/edit/${listing.business_id}`"
+            />
+            <VBtn icon="bx-trash" variant="text" color="error" />
+          </div>
           <VBtn
+            v-if="isListing"
             :icon="isLiked ? 'iconamoon-like-fill' : 'iconamoon-like-light'"
             size="large"
             @click="isLiked = !isLiked"
