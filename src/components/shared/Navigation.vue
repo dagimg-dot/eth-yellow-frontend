@@ -121,7 +121,7 @@ const authenticate = () => {
         >
           Login
         </VBtn>
-        <UserProfile class="animate-fade-in-left" />
+        <UserAvatarBadge class="animate-fade-in-left" />
       </div>
       <VAppBarNavIcon
         @click="drawer = !drawer"
