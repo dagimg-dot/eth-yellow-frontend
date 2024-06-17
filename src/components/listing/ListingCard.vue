@@ -28,7 +28,14 @@ const props = defineProps({
   },
 });
 
-const goToDetialsPage = () => {
+const goToDetialsPage = (ev) => {
+  if (
+    ev.target.nodeName == "BUTTON" ||
+    ev.target.nodeName == "svg" ||
+    ev.target.nodeName == "path"
+  )
+    return;
+
   router.push(`/listings/${props.listing.business_id}`);
 };
 </script>
