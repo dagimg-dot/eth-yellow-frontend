@@ -48,7 +48,7 @@ const loginHandler = async () => {
 </script>
 
 <template>
-  <div class="d-flex h-screen align-center justify-center">
+  <div class="d-flex h-screen align-center justify-center bg-background">
     <VCard class="auth-card pa-4 pt-7" max-width="448">
       <RouterLink class="text-decoration-none text-primary" to="/">
         <VCardItem class="justify-center">

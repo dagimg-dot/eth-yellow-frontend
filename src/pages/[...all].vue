@@ -1,7 +1,7 @@
 <script setup></script>
 
 <template>
-  <div class="misc-wrapper">
+  <div class="misc-wrapper bg-background">
     <ErrorHeader
       error-title="Page Not Found ⚠️"
       error-description="We couldn't find the page you are looking for."
