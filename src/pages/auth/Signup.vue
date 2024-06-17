@@ -57,122 +57,124 @@ const signupHandler = async () => {
 </script>
 
 <template>
-  <div class="d-flex h-screen align-center justify-center bg-background">
-    <VCard class="auth-card pa-4 pt-7" max-width="448">
-      <RouterLink class="text-decoration-none text-primary" to="/">
-        <VCardItem class="justify-center">
-          <VCardTitle class="text-2xl font-weight-bold">
-            ethyellow.
-          </VCardTitle>
-        </VCardItem>
-      </RouterLink>
+  <VApp>
+    <VMain class="d-flex h-screen align-center justify-center">
+      <VCard class="auth-card pa-4 pt-7" max-width="448">
+        <RouterLink class="text-decoration-none text-primary" to="/">
+          <VCardItem class="justify-center">
+            <VCardTitle class="text-2xl font-weight-bold">
+              ethyellow.
+            </VCardTitle>
+          </VCardItem>
+        </RouterLink>
 
-      <VCardText class="pt-2">
-        <h5 class="text-h5 mb-1">Adventure starts here 🚀</h5>
-        <p class="mb-0">
-          Reach larger audience with <strong>ethyellow.</strong> Sign up to get
-          started.
-        </p>
-      </VCardText>
+        <VCardText class="pt-2">
+          <h5 class="text-h5 mb-1">Adventure starts here 🚀</h5>
+          <p class="mb-0">
+            Reach larger audience with <strong>ethyellow.</strong> Sign up to
+            get started.
+          </p>
+        </VCardText>
 
-      <VCardText>
-        <VForm @submit.prevent="signupHandler" ref="signupForm">
-          <VRow>
-            <!-- Email -->
-            <VCol cols="12">
-              <VTextField
-                v-model="form.username"
-                autofocus
-                placeholder="jvon"
-                label="Username"
-                :rules="usernameRules"
-                type="text"
-                required
-              />
-            </VCol>
+        <VCardText>
+          <VForm @submit.prevent="signupHandler" ref="signupForm">
+            <VRow>
+              <!-- Email -->
+              <VCol cols="12">
+                <VTextField
+                  v-model="form.username"
+                  autofocus
+                  placeholder="jvon"
+                  label="Username"
+                  :rules="usernameRules"
+                  type="text"
+                  required
+                />
+              </VCol>
 
-            <!-- Username -->
-            <VCol cols="12">
-              <VTextField
-                v-model="form.email"
-                placeholder="johndoe@email.com"
-                label="Email"
-                :rules="emailRules"
-                type="email"
-                required
-              />
-            </VCol>
+              <!-- Username -->
+              <VCol cols="12">
+                <VTextField
+                  v-model="form.email"
+                  placeholder="johndoe@email.com"
+                  label="Email"
+                  :rules="emailRules"
+                  type="email"
+                  required
+                />
+              </VCol>
 
-            <!-- Password -->
-            <VCol cols="12">
-              <VTextField
-                v-model="form.password"
-                label="Password"
-                placeholder="············"
-                :type="isPasswordVisible ? 'text' : 'password'"
-                :append-inner-icon="isPasswordVisible ? 'bx-hide' : 'bx-show'"
-                @click:append-inner="isPasswordVisible = !isPasswordVisible"
-                :rules="passwordRules"
-                required
-              />
-            </VCol>
+              <!-- Password -->
+              <VCol cols="12">
+                <VTextField
+                  v-model="form.password"
+                  label="Password"
+                  placeholder="············"
+                  :type="isPasswordVisible ? 'text' : 'password'"
+                  :append-inner-icon="isPasswordVisible ? 'bx-hide' : 'bx-show'"
+                  @click:append-inner="isPasswordVisible = !isPasswordVisible"
+                  :rules="passwordRules"
+                  required
+                />
+              </VCol>
 
-            <!-- Confirm Password -->
-            <VCol cols="12">
-              <VTextField
-                v-model="form.confirmedPassword"
-                label="Confirm Password"
-                placeholder="············"
-                :type="isConfirmPasswordVisible ? 'text' : 'password'"
-                :append-inner-icon="
-                  isConfirmPasswordVisible ? 'bx-hide' : 'bx-show'
-                "
-                @click:append-inner="
-                  isConfirmPasswordVisible = !isConfirmPasswordVisible
-                "
-                :rules="confirmedPasswordRules"
-                required
-              />
+              <!-- Confirm Password -->
+              <VCol cols="12">
+                <VTextField
+                  v-model="form.confirmedPassword"
+                  label="Confirm Password"
+                  placeholder="············"
+                  :type="isConfirmPasswordVisible ? 'text' : 'password'"
+                  :append-inner-icon="
+                    isConfirmPasswordVisible ? 'bx-hide' : 'bx-show'
+                  "
+                  @click:append-inner="
+                    isConfirmPasswordVisible = !isConfirmPasswordVisible
+                  "
+                  :rules="confirmedPasswordRules"
+                  required
+                />
 
-              <!-- Error Alert -->
-              <div class="my-8">
-                <v-alert
-                  v-if="error"
-                  icon="bxs-x-circle"
-                  :text="error"
-                  type="error"
-                  variant="tonal"
-                  closable
-                >
-                </v-alert>
-              </div>
+                <!-- Error Alert -->
+                <div class="my-8">
+                  <v-alert
+                    v-if="error"
+                    icon="bxs-x-circle"
+                    :text="error"
+                    type="error"
+                    variant="tonal"
+                    closable
+                  >
+                  </v-alert>
+                </div>
 
-              <!-- signup button -->
-              <VBtn block type="submit" :loading="loading"> Sign Up </VBtn>
-            </VCol>
+                <!-- signup button -->
+                <VBtn block type="submit" :loading="loading"> Sign Up </VBtn>
+              </VCol>
 
-            <!-- create account -->
-            <VCol cols="12" class="text-center text-base">
-              <span>Already have an account?</span>
-              <RouterLink class="text-primary ms-2" to="/auth/login">
-                Sign in
-              </RouterLink>
-            </VCol>
+              <!-- create account -->
+              <VCol cols="12" class="text-center text-base">
+                <span>Already have an account?</span>
+                <RouterLink class="text-primary ms-2" to="/auth/login">
+                  Sign in
+                </RouterLink>
+              </VCol>
 
-            <VCol cols="12" class="d-flex align-center">
-              <VDivider />
-              <span class="mx-4">or</span>
-              <VDivider />
-            </VCol>
-            <!-- auth providers -->
-            <VCol cols="12" class="text-center">
-              <AuthProvider />
-            </VCol>
-          </VRow>
-        </VForm>
-      </VCardText>
-    </VCard>
-  </div>
+              <VCol cols="12" class="d-flex align-center">
+                <VDivider />
+                <span class="mx-4">or</span>
+                <VDivider />
+              </VCol>
+              <!-- auth providers -->
+              <VCol cols="12" class="text-center">
+                <AuthProvider />
+              </VCol>
+            </VRow>
+          </VForm>
+        </VCardText>
+      </VCard>
+    </VMain>
+  </VApp>
 </template>
 
 <style scoped>
