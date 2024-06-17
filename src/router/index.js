@@ -4,7 +4,7 @@ import generatedRoutes from "virtual:generated-pages";
 import { toast } from "vue3-toastify";
 import { useAuthStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
-import { validate } from "uuid";
+import { validate as validateUUID } from "uuid";
 
 const routes = setupLayouts(generatedRoutes);
 const history = createWebHistory();
@@ -33,7 +33,7 @@ const router = createRouter({
   },
 });
 
-const routeGuard = (to, from, next) => {
+router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
   const { isLoggedIn } = storeToRefs(authStore);
 
@@ -43,14 +43,6 @@ const routeGuard = (to, from, next) => {
       next("/auth/login");
       return;
     }
-
-    if (GUARDED_DYNAMIC_ROUTES_WITH_ID.includes(to.matched[0].path)) {
-      const id = to.params.id;
-      const isValid = validate(id);
-      if (!isValid) {
-        next("/notfound");
-      }
-    }
   } else {
     if (AUTH_ROUTES.includes(to.path)) {
       toast.info("You are already logged in!");
@@ -58,10 +50,15 @@ const routeGuard = (to, from, next) => {
       return;
     }
   }
-};
 
-router.beforeEach((to, from, next) => {
-  routeGuard(to, from, next);
+  if (GUARDED_DYNAMIC_ROUTES_WITH_ID.includes(to.matched[0].path)) {
+    const id = to.params.id;
+    const isValid = validateUUID(id);
+    if (!isValid) {
+      next("/notfound");
+      return;
+    }
+  }
 
   next();
 });
