@@ -45,7 +45,10 @@ const goToDetialsPage = (ev) => {
 
 <template>
   <VSkeletonLoader :loading="props.loading" type="image, article">
-    <VCard class="w-100 cursor-pointer" @click="goToDetialsPage">
+    <VCard
+      class="w-100 cursor-pointer card-hover-effect"
+      @click="goToDetialsPage"
+    >
       <VImg :src="avatar" height="200px" cover />
 
       <VCardItem>
@@ -86,4 +89,12 @@ const goToDetialsPage = (ev) => {
   </VSkeletonLoader>
 </template>
 
-<style scoped></style>
+<style scoped>
+.card-hover-effect {
+  transition: all 0.3s ease-in-out;
+}
+
+.card-hover-effect:hover {
+  transform: scale(1.05);
+}
+</style>
