@@ -40,7 +40,7 @@ router.beforeEach((to, from, next) => {
   if (!isLoggedIn.value) {
     if (
       isGuarded(to.path) ||
-      GUARDED_DYNAMIC_ROUTES_WITH_ID.includes(to.matched[0].path)
+      GUARDED_DYNAMIC_ROUTES_WITH_ID[0] === to.matched[0].path
     ) {
       toast.error("You need to be logged in to access this page!");
       next("/auth/login");
