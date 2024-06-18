@@ -26,7 +26,7 @@ const props = defineProps({
   loading: {
     type: Boolean,
   },
-  isListing: {
+  isAllowed: {
     type: Boolean,
   },
 });
@@ -65,7 +65,7 @@ const goToDetialsPage = (ev) => {
               {{ trimText(props.listing.description, 90) }}
             </p>
           </div>
-          <div v-if="!isListing" class="d-flex flex-column">
+          <div v-if="isAllowed" class="d-flex flex-column">
             <VBtn
               icon="bx-edit"
               variant="text"
@@ -74,7 +74,7 @@ const goToDetialsPage = (ev) => {
             <VBtn icon="bx-trash" variant="text" color="error" />
           </div>
           <VBtn
-            v-if="isListing"
+            v-if="!isAllowed"
             :icon="isLiked ? 'iconamoon-like-fill' : 'iconamoon-like-light'"
             size="large"
             @click="isLiked = !isLiked"

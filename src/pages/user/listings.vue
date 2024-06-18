@@ -37,7 +37,7 @@ onListingError((error) => {
       <ListingCard
         :listing="listing"
         :loading="listingLoading"
-        :isListing="false"
+        :isAllowed="true"
       />
     </VCol>
   </VRow>
