@@ -1,15 +1,6 @@
 <script setup>
-import { computed, ref, watch, watchEffect } from "vue";
 import ListingRules from "@/utils/listingFormRules";
-import { useReverseGeoCode } from "@/composables/reverseGeoCode";
-import { locateUser } from "@/utils/geoLocation";
-import { toast } from "vue3-toastify";
-import { useLazyQuery, useMutation } from "@vue/apollo-composable";
-import GET_CATEGORIES from "@/graphql/queries/getCategories.gql";
-import { useAuthStore } from "@/store/modules/auth";
-import { storeToRefs } from "pinia";
-import CREATE_LISTING_MUTATION from "@/graphql/mutations/createListing.gql";
-import { parseErrorMessage } from "@/utils/errorParser";
+import { useListingForm } from "@/composables/useListingForm";
 
 const props = defineProps({
   business: {
@@ -52,150 +43,20 @@ const props = defineProps({
   },
 });
 
-const isEditMode = props.business?.business_id !== undefined;
-
-const form = ref({
-  name: props.business?.name || "",
-  email: props.business?.email || "",
-  description: props.business?.description || "",
-  phone_number: props.business?.phone_number || "",
-  website: props.business?.website || "",
-  isAddressFetched: false,
-  address: props.business?.address || "",
-  city: props.business?.city || "",
-  latitude: props.business?.latitude || "",
-  longitude: props.business?.longitude || "",
-  postal_code: props.business?.postal_code || "",
-  categories: props.business?.categories || [],
-  country: props.business?.country || "",
-  images: props.business?.images || [],
-});
-
-const isAddressFetchedRef = computed(() => form.value.isAddressFetched);
-
-const listingForm = ref(null);
-
-const authStore = useAuthStore();
-const { user } = storeToRefs(authStore);
-
-const resetForm = () => {
-  form.value = {};
-};
-
-const getChoosenCategoriesID = () => {
-  return categories.value
-    .filter((category) => form.value.categories.includes(category.name))
-    .map((category) => ({
-      category_id: category.category_id,
-    }));
-};
-
-// Fetch categories
 const {
-  load: fetchCategories,
-  result: categoryResult,
-  loading: categoryLoading,
-  error: categoryError,
-} = useLazyQuery(GET_CATEGORIES, null, {
-  context: {
-    authRequired: false,
-  },
-});
-
-const categories = computed(() => categoryResult.value?.categories ?? []);
-
-const getCategories = async () => {
-  try {
-    await fetchCategories();
-  } catch (error) {}
-};
-
-const {
-  mutate: addListing,
-  loading: createLoading,
-  onError: onCreateError,
-  onDone: onCreateDone,
-} = useMutation(CREATE_LISTING_MUTATION, {
-  context: {
-    authRequired: true,
-  },
-});
-
-onCreateError((error) => {
-  const parsedError = parseErrorMessage(error.message);
-  toast.error(parsedError);
-});
-
-onCreateDone(() => {
-  toast.success("Business added successfully");
-  resetForm();
-});
-
-const addBusiness = async () => {
-  const { valid } = await listingForm.value.validate();
-
-  if (!valid || form.value.categories.length === 0) {
-    return;
-  }
-
-  const business = {
-    owner_id: user.value.user_id,
-    ...form.value,
-    categoryIds: getChoosenCategoriesID(),
-  };
-
-  console.log(business);
-
-  if (isEditMode) {
-    // Update business
-  } else {
-    await addListing(business);
-  }
-};
-
-const { locate, result, loading, error, abort } = useReverseGeoCode();
-
-const getLocation = () => {
-  form.value.isAddressFetched = !form.value.isAddressFetched;
-};
-
-watch(isAddressFetchedRef, () => {
-  if (isAddressFetchedRef.value) {
-    locateUser(locate);
-  } else {
-    abort();
-    form.value.address = "";
-    form.value.city = "";
-    form.value.country = "";
-    form.value.longitude = "";
-    form.value.latitude = "";
-  }
-});
-
-watchEffect(() => {
-  if (result.value) {
-    form.value.address =
-      result.value.address.road ||
-      "Unable to find address, please enter manually";
-
-    form.value.latitude = result.value.lat;
-    form.value.longitude = result.value.lon;
-
-    form.value.city =
-      result.value.address.city ||
-      result.value.address.state ||
-      "Unable to find city, please enter manually";
-
-    form.value.country =
-      result.value.address.country ||
-      "Unable to find country, please enter manually";
-  }
-
-  if (error.value) {
-    toast.error(error.value);
-    error.value = null;
-  }
-});
+  form,
+  isEditMode,
+  listingForm,
+  categories,
+  categoryLoading,
+  categoryError,
+  createLoading,
+  locationLoading,
+  getCategories,
+  getLocation,
+  addBusiness,
+  resetForm,
+} = useListingForm(props);
 </script>
 
 <template>
@@ -258,7 +119,7 @@ watchEffect(() => {
           class="mt-4"
           v-model="form.address"
           prepend-inner-icon="mdi-map-marker"
-          :loading="loading"
+          :loading="locationLoading"
           label="Address"
           placeholder="Namibia Street"
           :rules="ListingRules.addressRules"
@@ -269,7 +130,7 @@ watchEffect(() => {
         <VTextField
           v-model="form.city"
           prepend-inner-icon="mdi-city"
-          :loading="loading"
+          :loading="locationLoading"
           label="City"
           placeholder="Addis Ababa"
           :rules="ListingRules.cityRules"
@@ -280,7 +141,7 @@ watchEffect(() => {
         <VTextField
           v-model="form.latitude"
           prepend-inner-icon="mdi-latitude"
-          :loading="loading"
+          :loading="locationLoading"
           label="Latitude"
           :rules="ListingRules.coordinatesRules"
         />
@@ -290,7 +151,7 @@ watchEffect(() => {
         <VTextField
           v-model="form.longitude"
           prepend-inner-icon="mdi-longitude"
-          :loading="loading"
+          :loading="locationLoading"
           label="Longitude"
           :rules="ListingRules.coordinatesRules"
         />
@@ -300,7 +161,7 @@ watchEffect(() => {
         <VTextField
           v-model="form.country"
           prepend-inner-icon="mdi-earth"
-          :loading="loading"
+          :loading="locationLoading"
           label="Country"
           placeholder="Ethiopia"
           :rules="ListingRules.countryRules"
