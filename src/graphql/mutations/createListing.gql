@@ -1,6 +1,6 @@
 mutation AddBusiness(
   $owner_id: uuid!
-  $name: name!
+  $name: String!
   $description: String!
   $email: String!
   $phone_number: String!
