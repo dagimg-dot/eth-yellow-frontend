@@ -73,7 +73,7 @@ const logout = () => {
 
           <VListItem link>
             <template #prepend>
-              <VIcon class="me-2" icon="gis-poi-favorite" size="22" />
+              <VIcon class="me-2" icon="fontisto-favorite" size="22" />
             </template>
 
             <VListItemTitle>Favorites</VListItemTitle>
