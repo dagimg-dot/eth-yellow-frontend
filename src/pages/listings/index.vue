@@ -1,8 +1,12 @@
 <script setup>
 import { useQuery } from "@vue/apollo-composable";
 import GET_LISTINGS from "@/graphql/queries/getListings.gql";
-import { computed } from "vue";
 import { toast } from "vue3-toastify";
+import { useFilterStore } from "@/store/modules/filterStore";
+import { storeToRefs } from "pinia";
+
+const filterStore = useFilterStore();
+const { listings, loading } = storeToRefs(filterStore);
 
 // Fetch Listings
 const {
@@ -15,7 +19,7 @@ const {
   },
 });
 
-const listings = computed(() => listingResult.value?.businesses ?? []);
+filterStore.setListings(listingResult.value?.businesses);
 
 onListingError((error) => {
   toast.error("Failed to fetch listings, ", error.message);
@@ -23,13 +27,14 @@ onListingError((error) => {
 </script>
 
 <template>
-  <div class="d-flex flex-column ga-4">
+  <div class="d-flex flex-column ga-4 w-100">
+    <Header />
     <FilterBar />
     <VRow>
       <VCol lg="4" sm="6" cols="12" v-for="listing in listings">
         <ListingCard
           :listing="listing"
-          :loading="listingLoading"
+          :loading="listingLoading || loading"
           :isAllowed="false"
         />
       </VCol>

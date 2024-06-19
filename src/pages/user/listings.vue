@@ -1,11 +1,14 @@
 <script setup>
 import { useQuery } from "@vue/apollo-composable";
 import GET_USER_LISTINGS from "@/graphql/queries/getUserBusiness.gql";
-import { computed } from "vue";
 import { useAuthStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
+import { useFilterStore } from "@/store/modules/filterStore";
+import { toast } from "vue3-toastify";
 
 const authStore = useAuthStore();
+const filterStore = useFilterStore();
+const { listings } = storeToRefs(filterStore);
 const { user } = storeToRefs(authStore);
 
 const {
@@ -24,23 +27,27 @@ const {
   }
 );
 
-const listings = computed(() => listingResult.value?.businesses ?? []);
+filterStore.setListings(listingResult.value?.businesses);
 
 onListingError((error) => {
-  console.log("Failed to fetch listings: ", error.mesage);
+  toast.error("Failed to fetch listings, ", error.message);
 });
 </script>
 
 <template>
-  <VRow>
-    <VCol lg="4" sm="6" cols="12" v-for="listing in listings">
-      <ListingCard
-        :listing="listing"
-        :loading="listingLoading"
-        :isAllowed="true"
-      />
-    </VCol>
-  </VRow>
+  <div class="d-flex flex-column ga-4 w-100">
+    <Header />
+    <FilterBar />
+    <VRow>
+      <VCol lg="4" sm="6" cols="12" v-for="listing in listings">
+        <ListingCard
+          :listing="listing"
+          :loading="listingLoading"
+          :isAllowed="true"
+        />
+      </VCol>
+    </VRow>
+  </div>
 </template>
 
 <route lang="yaml">
