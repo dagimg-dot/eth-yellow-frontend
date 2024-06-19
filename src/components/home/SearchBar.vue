@@ -48,7 +48,7 @@ const { locate, result, loading, error, abort } = useReverseGeoCode();
 
 watch(locationChoice, () => {
   if (form.value.location === CUR_LOCATION) {
-    locateUser();
+    locateUser(locate);
   } else {
     abort();
   }
