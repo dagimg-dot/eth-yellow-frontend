@@ -108,6 +108,8 @@ const searchRules = [(v) => !!v || "Search query is required"];
             :disabled="loading"
             type="submit"
             width="100%"
+            max-height="56px"
+            min-height="40px"
             height="100%"
             density="default"
           >
