@@ -18,7 +18,6 @@ export function useCities() {
 
   watch(cityResult, (newResult) => {
     if (newResult) {
-      console.log(newResult);
       filterStore.setCities(newResult.locations);
     }
   });
