@@ -3,15 +3,15 @@ import { computed, ref, watch, watchEffect } from "vue";
 import { toast } from "vue3-toastify";
 import { useReverseGeoCode } from "@/composables/reverseGeoCode";
 import { locateUser } from "@/utils/geoLocation";
-import GET_CATEGORIES from "@/graphql/queries/getCategories.gql";
+import { GET_CITIES, GET_CATEGORIES } from "@/graphql/queries";
 import { useLazyQuery } from "@vue/apollo-composable";
+import { useRouter } from "vue-router";
 
+const router = useRouter();
 const CUR_LOCATION = "Current Location";
 
-const form = ref({
-  location: "Location",
-  searchQuery: null,
-});
+const locationChoice = ref("Location");
+const categoriesChoice = ref([]);
 
 // Fetch categories
 const {
@@ -26,13 +26,19 @@ const {
 
 const categories = computed(() => categoryResult.value?.categories || []);
 
+// Fetch cities
+const {
+  load: fetchCities,
+  result: cityResult,
+  loading: cityLoading,
+} = useLazyQuery(GET_CITIES);
+const cities = computed(() => cityResult.value?.locations || []);
+const uniqueCities = computed(() => [
+  CUR_LOCATION,
+  ...new Set(cities.value.map((c) => c.city)),
+]);
+
 const formRef = ref(null);
-
-const locationChoice = computed(() => form.value.location);
-
-const mockFetchedCityList = ref(["Hawassa", "Bahir Dar", "Nazret", "Gondar"]);
-
-const mockLocations = ref([CUR_LOCATION, ...mockFetchedCityList.value]);
 
 const search = async () => {
   const { valid } = await formRef.value.validate();
@@ -41,13 +47,19 @@ const search = async () => {
     return;
   }
 
-  console.log(form.value);
+  router.push({
+    name: "listings",
+    query: {
+      cities: [locationChoice.value].map(encodeURIComponent).join(","),
+      categories: categoriesChoice.value.map(encodeURIComponent).join(","),
+    },
+  });
 };
 
 const { locate, result, loading, error, abort } = useReverseGeoCode();
 
 watch(locationChoice, () => {
-  if (form.value.location === CUR_LOCATION) {
+  if (locationChoice.value === CUR_LOCATION) {
     locateUser(locate);
   } else {
     abort();
@@ -56,7 +68,7 @@ watch(locationChoice, () => {
 
 watchEffect(() => {
   if (result.value) {
-    form.value.location =
+    locationChoice.value =
       result.value.address.city || result.value.address.state;
   }
 
@@ -65,8 +77,6 @@ watchEffect(() => {
     error.value = null;
   }
 });
-
-const tags = ref(["Restaurant", "Clinic", "Pharmacy"]);
 
 const locationRules = [(v) => v !== "Location" || "Location is required"];
 
@@ -79,11 +89,12 @@ const searchRules = [(v) => !!v || "Search query is required"];
       <VRow>
         <VCol cols="12" md="4">
           <VCombobox
-            v-model="form.location"
-            :items="mockLocations"
+            v-model="locationChoice"
+            :items="uniqueCities"
             dense
             prepend-inner-icon="bx-map"
-            :loading="loading"
+            :loading="loading || cityLoading"
+            @focus="fetchCities()"
             @click:prepend-inner="locateUser(locate)"
             label="Location"
             :rules="locationRules"
@@ -91,7 +102,9 @@ const searchRules = [(v) => !!v || "Search query is required"];
         </VCol>
         <VCol cols="12" md="6">
           <VCombobox
-            v-model="form.searchQuery"
+            v-model="categoriesChoice"
+            multiple
+            closable-chips
             clearable
             chips
             label="Search"
