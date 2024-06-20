@@ -3,8 +3,8 @@ import avatar from "@/assets/images/avatar.png";
 import { useMutation, useQuery } from "@vue/apollo-composable";
 import { computed, ref } from "vue";
 import { toast } from "vue3-toastify";
-import GET_USER from "@/graphql/queries/getUser.gql";
-import UPDATE_USER from "@/graphql/mutations/updateUser.gql";
+import { GET_USER } from "@/graphql/queries";
+import { UPDATE_USER_MUTATION } from "@/graphql/mutations";
 import ListingRules from "@/utils/listingFormRules";
 import { useAuthStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
@@ -97,7 +97,7 @@ const {
   loading: updateLoading,
   onError: onUpdateError,
   onDone: onUpdateDone,
-} = useMutation(UPDATE_USER, {
+} = useMutation(UPDATE_USER_MUTATION, {
   context: {
     authRequired: true,
   },
@@ -179,10 +179,8 @@ const updateProfile = async () => {
         <VDivider />
 
         <VCardText>
-          <!-- 👉 Form -->
           <VForm class="mt-6" @submit.prevent="updateProfile">
             <VRow>
-              <!-- 👉 First Name -->
               <VCol md="6" cols="12">
                 <VTextField
                   v-model="form.first_name"
@@ -192,8 +190,6 @@ const updateProfile = async () => {
                   :loading="userLoading"
                 />
               </VCol>
-
-              <!-- 👉 Last Name -->
               <VCol md="6" cols="12">
                 <VTextField
                   v-model="form.last_name"
@@ -203,8 +199,6 @@ const updateProfile = async () => {
                   :loading="userLoading"
                 />
               </VCol>
-
-              <!-- 👉 Last Name -->
               <VCol md="6" cols="12">
                 <VTextField
                   v-model="form.username"
@@ -214,8 +208,6 @@ const updateProfile = async () => {
                   :loading="userLoading"
                 />
               </VCol>
-
-              <!-- 👉 Email -->
               <VCol cols="12" md="6">
                 <VTextField
                   v-model="form.email"
@@ -226,8 +218,6 @@ const updateProfile = async () => {
                   type="email"
                 />
               </VCol>
-
-              <!-- 👉 Phone -->
               <VCol cols="12" md="6">
                 <VTextField
                   v-model="form.phone_number"
@@ -237,8 +227,6 @@ const updateProfile = async () => {
                   placeholder="0918......"
                 />
               </VCol>
-
-              <!-- 👉 Form Actions -->
               <VCol cols="12" class="d-flex flex-wrap ga-4">
                 <VBtn
                   type="submit"
@@ -262,7 +250,6 @@ const updateProfile = async () => {
       </VCard>
     </VCol>
     <VCol cols="12">
-      <!-- 👉 Deactivate Account -->
       <VCard title="Delete Account">
         <VCardText>
           <div>
