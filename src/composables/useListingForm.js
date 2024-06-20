@@ -1,13 +1,14 @@
 import { ref, computed, watch, watchEffect } from "vue";
-import { useLazyQuery, useMutation } from "@vue/apollo-composable";
+import { useMutation } from "@vue/apollo-composable";
 import { useAuthStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
 import { toast } from "vue3-toastify";
-import { GET_CATEGORIES, GET_LISTINGS } from "@/graphql/queries";
+import { GET_LISTINGS } from "@/graphql/queries";
 import { CREATE_LISTING_MUTATION } from "@/graphql/mutations";
 import { parseErrorMessage } from "@/utils/errorParser";
-import { useReverseGeoCode } from "@/composables/reverseGeoCode";
+import { useReverseGeoCode } from "@/composables/useReverseGeoCode";
 import { locateUser } from "@/utils/geoLocation";
+import { useCategories } from "@/composables/useCategories";
 
 export function useListingForm(props) {
   const isEditMode = props.business?.business_id !== undefined;
@@ -48,25 +49,7 @@ export function useListingForm(props) {
       }));
   };
 
-  // Fetch categories
-  const {
-    load: fetchCategories,
-    result: categoryResult,
-    loading: categoryLoading,
-    error: categoryError,
-  } = useLazyQuery(GET_CATEGORIES, null, {
-    context: {
-      authRequired: false,
-    },
-  });
-
-  const categories = computed(() => categoryResult.value?.categories ?? []);
-
-  const getCategories = async () => {
-    try {
-      await fetchCategories();
-    } catch (error) {}
-  };
+  const { fetchCategories, categories, categoryLoading } = useCategories();
 
   const {
     mutate: addListing,
@@ -182,9 +165,8 @@ export function useListingForm(props) {
     categories,
     categoryLoading,
     createLoading,
-    categoryError,
     locationLoading,
-    getCategories,
+    fetchCategories,
     getLocation,
     addBusiness,
     resetForm,

@@ -49,10 +49,9 @@ const {
   listingForm,
   categories,
   categoryLoading,
-  categoryError,
   createLoading,
   locationLoading,
-  getCategories,
+  fetchCategories,
   getLocation,
   addBusiness,
   resetForm,
@@ -196,10 +195,9 @@ const {
           placeholder="Choose a category . . ."
           hint="You can select multiple categories by typing and selecting from the list"
           prepend-inner-icon="mdi-category"
-          :error="!!categoryError"
           :loading="categoryLoading"
           :items="categories.map((category) => category.name)"
-          @focus="getCategories()"
+          @focus="fetchCategories()"
           multiple
           :rules="ListingRules.categoryRules"
         />

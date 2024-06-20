@@ -1,11 +1,11 @@
-import { ref, computed, watchEffect, watch, onMounted } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { useLazyQuery, useQuery } from "@vue/apollo-composable";
 import { useRoute, useRouter } from "vue-router";
 import { useListingStore } from "@/store/modules/listingStore";
+import { useCategories } from "@/composables/useCategories";
 import { toast } from "vue3-toastify";
 import gql from "graphql-tag";
 import {
-  GET_CATEGORIES,
   GET_CITIES,
   GET_LISTINGS,
   GET_USER_LISTINGS,
@@ -61,12 +61,7 @@ export function useFilters() {
     router.push({ query: queryParams });
   };
 
-  const {
-    load: fetchCategories,
-    result: categoryResult,
-    loading: categoryLoading,
-  } = useLazyQuery(GET_CATEGORIES);
-  const categories = computed(() => categoryResult.value?.categories || []);
+  const { fetchCategories, categories, categoryLoading } = useCategories();
 
   const {
     load: fetchCities,
@@ -178,7 +173,7 @@ export function useFilters() {
     onError((error) => {
       toast.error("Failed to fetch listings, ", error.message);
     });
-  }, 300); // Adjust the delay as needed
+  }, 300);
 
   watch(
     [choosenCategories, choosenCities, searchQuery],

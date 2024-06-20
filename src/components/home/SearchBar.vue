@@ -3,9 +3,10 @@ import { computed, ref, watch, watchEffect } from "vue";
 import { toast } from "vue3-toastify";
 import { useReverseGeoCode } from "@/composables/useReverseGeoCode";
 import { locateUser } from "@/utils/geoLocation";
-import { GET_CITIES, GET_CATEGORIES } from "@/graphql/queries";
+import { GET_CITIES } from "@/graphql/queries";
 import { useLazyQuery } from "@vue/apollo-composable";
 import { useRouter } from "vue-router";
+import { useCategories } from "@/composables/useCategories";
 
 const router = useRouter();
 const CUR_LOCATION = "Current Location";
@@ -13,18 +14,7 @@ const CUR_LOCATION = "Current Location";
 const locationChoice = ref("Location");
 const categoriesChoice = ref([]);
 
-// Fetch categories
-const {
-  load: fetchCategories,
-  result: categoryResult,
-  loading: categoryLoading,
-} = useLazyQuery(GET_CATEGORIES, null, {
-  context: {
-    authRequired: false,
-  },
-});
-
-const categories = computed(() => categoryResult.value?.categories || []);
+const { fetchCategories, categories, categoryLoading } = useCategories();
 
 // Fetch cities
 const {
