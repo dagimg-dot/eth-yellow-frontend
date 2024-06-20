@@ -1,0 +1,24 @@
+query GetListing($business_id: uuid!) {
+  businesses_by_pk(business_id: $business_id) {
+    name
+    description
+    business_categories {
+      category {
+        name
+      }
+    }
+    contact_details {
+      email
+      phone_number
+      website
+    }
+    locations {
+      address
+      city
+      latitude
+      country
+      longitude
+      postal_code
+    }
+  }
+}
