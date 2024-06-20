@@ -35,5 +35,11 @@ mutation AddBusiness(
     }
   ) {
     business_id
+    name
+    description
+    locations {
+      city
+      country
+    }
   }
 }
