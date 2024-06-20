@@ -1,5 +1,5 @@
 <script setup>
-import { useUserListings } from "@/composables/userListings";
+import { useUserListings } from "@/composables/useUserListings";
 
 const { userListings, listingLoading } = useUserListings();
 </script>

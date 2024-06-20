@@ -29,7 +29,6 @@ export function useUserListings() {
   );
 
   watch(listingResult, (newResult) => {
-    console.log("useUserListings newResult: ", newResult?.businesses);
     listingStore.setUserListings(newResult?.businesses);
   });
 
