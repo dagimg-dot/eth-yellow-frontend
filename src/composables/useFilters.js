@@ -14,6 +14,7 @@ import {
 import { useAuthStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
 import debounce from "lodash/debounce";
+import defu from "defu";
 
 export function useFilters() {
   const router = useRouter();
@@ -43,11 +44,19 @@ export function useFilters() {
   });
 
   const updateURLFilters = () => {
-    const queryParams = {
-      categories: choosenCategories.value.map(encodeURIComponent).join(","),
-      cities: choosenCities.value.map(encodeURIComponent).join(","),
-      search: encodeURIComponent(searchQuery.value),
-    };
+    const queryParams = defu(
+      choosenCategories.value.length
+        ? {
+            categories: choosenCategories.value
+              .map(encodeURIComponent)
+              .join(","),
+          }
+        : {},
+      choosenCities.value.length
+        ? { cities: choosenCities.value.map(encodeURIComponent).join(",") }
+        : {},
+      searchQuery.value ? { search: encodeURIComponent(searchQuery.value) } : {}
+    );
 
     router.push({ query: queryParams });
   };
