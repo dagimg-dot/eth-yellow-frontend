@@ -3,10 +3,9 @@ import { computed, ref, watch, watchEffect } from "vue";
 import { toast } from "vue3-toastify";
 import { useReverseGeoCode } from "@/composables/useReverseGeoCode";
 import { locateUser } from "@/utils/geoLocation";
-import { GET_CITIES } from "@/graphql/queries";
-import { useLazyQuery } from "@vue/apollo-composable";
 import { useRouter } from "vue-router";
 import { useCategories } from "@/composables/useCategories";
+import { useCities } from "@/composables/useCities";
 
 const router = useRouter();
 const CUR_LOCATION = "Current Location";
@@ -15,18 +14,11 @@ const locationChoice = ref("Location");
 const categoriesChoice = ref([]);
 
 const { fetchCategories, categories, categoryLoading } = useCategories();
+const { fetchCities, uniqueCities, cityLoading } = useCities();
 
-// Fetch cities
-const {
-  load: fetchCities,
-  result: cityResult,
-  loading: cityLoading,
-} = useLazyQuery(GET_CITIES);
-const cities = computed(() => cityResult.value?.locations || []);
-const uniqueCities = computed(() => [
-  CUR_LOCATION,
-  ...new Set(cities.value.map((c) => c.city)),
-]);
+const cities = computed(() => [CUR_LOCATION, ...uniqueCities.value]);
+
+const { locate, result, loading, error, abort } = useReverseGeoCode();
 
 const formRef = ref(null);
 
@@ -45,8 +37,6 @@ const search = async () => {
     },
   });
 };
-
-const { locate, result, loading, error, abort } = useReverseGeoCode();
 
 watch(locationChoice, () => {
   if (locationChoice.value === CUR_LOCATION) {
@@ -80,10 +70,10 @@ const searchRules = [(v) => !!v || "Search query is required"];
         <VCol cols="12" md="4">
           <VCombobox
             v-model="locationChoice"
-            :items="uniqueCities"
+            :items="cities"
             dense
             prepend-inner-icon="bx-map"
-            :loading="loading || cityLoading"
+            :loading="cityLoading"
             @focus="fetchCities()"
             @click:prepend-inner="locateUser(locate)"
             label="Location"

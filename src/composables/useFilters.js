@@ -1,12 +1,12 @@
 import { ref, computed, watch, onMounted } from "vue";
-import { useLazyQuery, useQuery } from "@vue/apollo-composable";
+import { useQuery } from "@vue/apollo-composable";
 import { useRoute, useRouter } from "vue-router";
 import { useListingStore } from "@/store/modules/listingStore";
 import { useCategories } from "@/composables/useCategories";
+import { useCities } from "./useCities";
 import { toast } from "vue3-toastify";
 import gql from "graphql-tag";
 import {
-  GET_CITIES,
   GET_LISTINGS,
   GET_USER_LISTINGS,
   dynamicQuery,
@@ -62,16 +62,7 @@ export function useFilters() {
   };
 
   const { fetchCategories, categories, categoryLoading } = useCategories();
-
-  const {
-    load: fetchCities,
-    result: cityResult,
-    loading: cityLoading,
-  } = useLazyQuery(GET_CITIES);
-  const cities = computed(() => cityResult.value?.locations || []);
-  const uniqueCities = computed(() => [
-    ...new Set(cities.value.map((c) => c.city)),
-  ]);
+  const { fetchCities, uniqueCities, cityLoading } = useCities();
 
   const executeDynamicQuery = debounce(() => {
     if (
