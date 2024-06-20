@@ -1,7 +1,7 @@
 import { ref, computed, watchEffect, watch, onMounted } from "vue";
 import { useLazyQuery, useQuery } from "@vue/apollo-composable";
 import { useRoute, useRouter } from "vue-router";
-import { useFilterStore } from "@/store/modules/filterStore";
+import { useListingStore } from "@/store/modules/listingStore";
 import { toast } from "vue3-toastify";
 import gql from "graphql-tag";
 import {
@@ -19,7 +19,7 @@ export function useFilters() {
   const router = useRouter();
   const route = useRoute();
   const query = route.query;
-  const filterStore = useFilterStore();
+  const listingStore = useListingStore();
   const authStore = useAuthStore();
   const { user } = storeToRefs(authStore);
 
@@ -94,7 +94,7 @@ export function useFilters() {
 
         onUserListingResult((result) => {
           if (result.data && result.data.businesses) {
-            filterStore.setUserListings(result.data.businesses);
+            listingStore.setUserListings(result.data.businesses);
           }
         });
 
@@ -103,7 +103,7 @@ export function useFilters() {
         });
 
         watch(userListingLoading, () => {
-          filterStore.setLoading(userListingLoading.value);
+          listingStore.setLoading(userListingLoading.value);
         });
       } else {
         const {
@@ -114,7 +114,7 @@ export function useFilters() {
 
         onListingResult((result) => {
           if (result.data && result.data.businesses) {
-            filterStore.setListings(result.data.businesses);
+            listingStore.setListings(result.data.businesses);
           }
         });
 
@@ -123,7 +123,7 @@ export function useFilters() {
         });
 
         watch(fullListLoading, () => {
-          filterStore.setLoading(fullListLoading.value);
+          listingStore.setLoading(fullListLoading.value);
         });
       }
 
@@ -153,15 +153,15 @@ export function useFilters() {
     });
 
     watch(filteredListLoading, () => {
-      filterStore.setLoading(filteredListLoading.value);
+      listingStore.setLoading(filteredListLoading.value);
     });
 
     onResult((result) => {
       if (result.data && result.data.businesses) {
         if (isUserListingPage) {
-          filterStore.setUserListings(result.data.businesses);
+          listingStore.setUserListings(result.data.businesses);
         } else {
-          filterStore.setListings(result.data.businesses);
+          listingStore.setListings(result.data.businesses);
         }
       }
     });

@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
-export const useFilterStore = defineStore("filter", () => {
+export const useListingStore = defineStore("filter", () => {
   const listings = ref([]);
   const userListings = ref([]);
   const loading = ref(false);

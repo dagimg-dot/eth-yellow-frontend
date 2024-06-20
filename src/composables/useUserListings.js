@@ -2,14 +2,14 @@ import { watch } from "vue";
 import { useQuery } from "@vue/apollo-composable";
 import { toast } from "vue3-toastify";
 import { useAuthStore } from "@/store/modules/auth";
-import { useFilterStore } from "@/store/modules/filterStore";
+import { useListingStore } from "@/store/modules/listingStore";
 import { storeToRefs } from "pinia";
 import { GET_USER_LISTINGS } from "@/graphql/queries";
 
 export function useUserListings() {
   const authStore = useAuthStore();
-  const filterStore = useFilterStore();
-  const { userListings } = storeToRefs(filterStore);
+  const listingStore = useListingStore();
+  const { userListings } = storeToRefs(listingStore);
   const { user } = storeToRefs(authStore);
 
   const {
@@ -30,7 +30,7 @@ export function useUserListings() {
 
   watch(listingResult, (newResult) => {
     console.log("useUserListings newResult: ", newResult?.businesses);
-    filterStore.setUserListings(newResult?.businesses);
+    listingStore.setUserListings(newResult?.businesses);
   });
 
   onListingError((error) => {
