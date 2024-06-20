@@ -13,6 +13,7 @@ import {
 } from "@/graphql/queries";
 import { useAuthStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
+import debounce from "lodash/debounce";
 
 export function useFilters() {
   const router = useRouter();
@@ -41,19 +42,15 @@ export function useFilters() {
     }
   });
 
-  watch(
-    [choosenCategories, choosenCities, searchQuery],
-    () => {
-      const queryParams = {
-        categories: choosenCategories.value.map(encodeURIComponent).join(","),
-        cities: choosenCities.value.map(encodeURIComponent).join(","),
-        search: encodeURIComponent(searchQuery.value),
-      };
+  const updateURLFilters = () => {
+    const queryParams = {
+      categories: choosenCategories.value.map(encodeURIComponent).join(","),
+      cities: choosenCities.value.map(encodeURIComponent).join(","),
+      search: encodeURIComponent(searchQuery.value),
+    };
 
-      router.push({ query: queryParams });
-    },
-    { deep: true }
-  );
+    router.push({ query: queryParams });
+  };
 
   const {
     load: fetchCategories,
@@ -72,7 +69,7 @@ export function useFilters() {
     ...new Set(cities.value.map((c) => c.city)),
   ]);
 
-  watchEffect(() => {
+  const executeDynamicQuery = debounce(() => {
     if (
       !choosenCategories.value.length &&
       !choosenCities.value.length &&
@@ -172,7 +169,18 @@ export function useFilters() {
     onError((error) => {
       toast.error("Failed to fetch listings, ", error.message);
     });
-  });
+  }, 300); // Adjust the delay as needed
+
+  watch(
+    [choosenCategories, choosenCities, searchQuery],
+    () => {
+      updateURLFilters();
+      executeDynamicQuery();
+    },
+    {
+      deep: true,
+    }
+  );
 
   return {
     choosenCategories,
