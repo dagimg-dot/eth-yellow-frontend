@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from "vue";
-import { useSignup } from "@/composables/signup";
+import { useSignup } from "@/composables/useSignup";
 import { toast } from "vue3-toastify";
 import { useRouter } from "vue-router";
 

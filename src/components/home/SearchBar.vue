@@ -1,7 +1,7 @@
 <script setup>
 import { computed, ref, watch, watchEffect } from "vue";
 import { toast } from "vue3-toastify";
-import { useReverseGeoCode } from "@/composables/reverseGeoCode";
+import { useReverseGeoCode } from "@/composables/useReverseGeoCode";
 import { locateUser } from "@/utils/geoLocation";
 import { GET_CITIES, GET_CATEGORIES } from "@/graphql/queries";
 import { useLazyQuery } from "@vue/apollo-composable";
