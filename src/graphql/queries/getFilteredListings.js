@@ -4,6 +4,7 @@ export const dynamicQuery = (filter) => {
       ${filter.cityNames.length === 0 ? "" : "$cityNames: [name!]!"}
         ${filter.categoryNames.length === 0 ? "" : "$categoryNames: [name!]!"}
         ${filter.query === "" ? "" : "$query: String!"}
+        ${filter.owner_id === null || undefined ? "" : "$owner_id: uuid!"}
     ) {
       businesses(
         where: {
@@ -18,6 +19,11 @@ export const dynamicQuery = (filter) => {
                 : "business_categories: { category: { name: { _in: $categoryNames } } }"
             }
           ${filter.query === "" ? "" : "name: { _ilike: $query }"}
+          ${
+            filter.owner_id === null || undefined
+              ? ""
+              : "owner_id: {_eq: $owner_id}"
+          }
 
         }
       ) {
