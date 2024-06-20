@@ -73,7 +73,7 @@ const searchRules = [(v) => !!v || "Search query is required"];
             :items="cities"
             dense
             prepend-inner-icon="bx-map"
-            :loading="cityLoading"
+            :loading="cityLoading || loading"
             @focus="fetchCities()"
             @click:prepend-inner="locateUser(locate)"
             label="Location"
