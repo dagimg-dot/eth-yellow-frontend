@@ -1,10 +1,13 @@
 import { GET_LISTING } from "@/graphql/queries";
 import { useQuery } from "@vue/apollo-composable";
 import { toast } from "vue3-toastify";
-import { watch, ref } from "vue";
+import { watch } from "vue";
+import { useListingStore } from "@/store/modules/listingStore";
+import { storeToRefs } from "pinia";
 
 export function useListing(id) {
-  const listing = ref({});
+  const listingStore = useListingStore();
+  const { listing } = storeToRefs(listingStore);
 
   const {
     result: listingResult,
@@ -23,9 +26,7 @@ export function useListing(id) {
   );
 
   watch(listingResult, (newResult) => {
-    if (newResult) {
-      listing.value = newResult.businesses_by_pk;
-    }
+    listingStore.setListing(newResult?.businesses_by_pk);
   });
 
   onListingError((error) => {

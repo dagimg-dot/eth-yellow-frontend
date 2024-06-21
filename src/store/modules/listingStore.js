@@ -3,6 +3,7 @@ import { ref } from "vue";
 
 export const useListingStore = defineStore("filter", () => {
   const listings = ref([]);
+  const listing = ref({});
   const userListings = ref([]);
   const loading = ref(false);
 
@@ -18,15 +19,23 @@ export const useListingStore = defineStore("filter", () => {
     }
   }
 
+  function setListing(newListing) {
+    if (newListing) {
+      listing.value = newListing;
+    }
+  }
+
   function setLoading(value) {
     loading.value = value;
   }
 
   return {
     listings,
-    loading,
+    listing,
     userListings,
+    loading,
     setListings,
+    setListing,
     setLoading,
     setUserListings,
   };
