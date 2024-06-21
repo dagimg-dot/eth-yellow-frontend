@@ -7,12 +7,12 @@ import { storeToRefs } from "pinia";
 
 export function useListing(id) {
   const listingStore = useListingStore();
-  const { listing } = storeToRefs(listingStore);
+  const { listing, loading } = storeToRefs(listingStore);
 
   const {
-    result: listingResult,
     loading: listingLoading,
     onError: onListingError,
+    onResult: onListingResult,
   } = useQuery(
     GET_LISTING,
     {
@@ -25,8 +25,14 @@ export function useListing(id) {
     }
   );
 
-  watch(listingResult, (newResult) => {
-    listingStore.setListing(newResult?.businesses_by_pk);
+  onListingResult((result) => {
+    if (result.data && result.data.businesses_by_pk) {
+      listingStore.setListing(result.data.businesses_by_pk);
+    }
+  });
+
+  watch(listingLoading, (newLoading) => {
+    listingStore.setLoading(newLoading);
   });
 
   onListingError((error) => {
@@ -35,6 +41,6 @@ export function useListing(id) {
 
   return {
     listing,
-    listingLoading,
+    loading,
   };
 }
