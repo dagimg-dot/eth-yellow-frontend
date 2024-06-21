@@ -1,20 +1,16 @@
 <script setup>
+import { useListing } from "@/composables/useListing";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
-console.log(route.params.id);
 
-const formObjFromAPI = {
-  business_id: route.params.id,
-  name: "The Club",
-  email: "the.club@gmail.com",
-};
+const { listing, loading } = useListing(route.params.id);
 </script>
 
 <template>
-  <VCard class="w-100 pa-6 h-screen">
+  <VCard class="w-100 pa-6">
     <span class="text-h4">Update your business details</span>
-    <ListingForm :business="formObjFromAPI" />
+    <ListingForm :business="listing" :loading="loading" />
   </VCard>
 </template>
 
