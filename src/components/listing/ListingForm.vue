@@ -1,51 +1,50 @@
 <script setup>
 import ListingRules from "@/utils/listingFormRules";
 import { useListingForm } from "@/composables/useListingForm";
+import { ref, watch } from "vue";
 
 const props = defineProps({
   business: {
-    business_id: {
-      type: String,
-    },
-    name: {
-      type: String,
-    },
-    email: {
-      type: String,
-    },
-    description: {
-      type: String,
-    },
-    phone_number: {
-      type: String,
-    },
-    website: {
-      type: String,
-    },
-    address: {
-      type: String,
-    },
-    city: {
-      type: String,
-    },
-    latitude: {
-      type: String,
-    },
-    longitude: {
-      type: String,
-    },
-    postal_code: {
-      type: String,
-    },
-    categories: {
-      type: Array,
-    },
+    type: Object,
+    default: () => ({}),
+  },
+  loading: {
+    type: Boolean,
   },
 });
 
+const isEditMode = ref(false);
+
+const flattenListingObj = (listing) => {
+  return {
+    name: listing.name,
+    description: listing.description,
+    email: listing.contact_details[0].email,
+    phone_number: listing.contact_details[0].phone_number,
+    website: listing.contact_details[0].website,
+    address: listing.locations[0].address,
+    isAddressFetched: false,
+    city: listing.locations[0].city,
+    latitude: listing.locations[0].latitude,
+    longitude: listing.locations[0].longitude,
+    country: listing.locations[0].country,
+    postal_code: listing.locations[0].postal_code,
+    categories: listing.business_categories.map((c) => c.category.name),
+  };
+};
+
+watch(
+  () => props.business,
+  (newVal) => {
+    if (newVal.business_id) {
+      isEditMode.value = true;
+    }
+    form.value = flattenListingObj(newVal);
+  }
+);
+
 const {
   form,
-  isEditMode,
   listingForm,
   categories,
   categoryLoading,
@@ -55,7 +54,7 @@ const {
   getLocation,
   addBusiness,
   resetForm,
-} = useListingForm(props);
+} = useListingForm(props, isEditMode);
 </script>
 
 <template>
@@ -87,7 +86,7 @@ const {
           prepend-inner-icon="bx-message-square-detail"
           label="Description"
           placeholder="brief description about the business"
-          :rules="ListingRules.phone_number"
+          :rules="ListingRules.descriptionRules"
         />
       </VCol>
 
