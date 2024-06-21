@@ -10,8 +10,8 @@ import { useReverseGeoCode } from "@/composables/useReverseGeoCode";
 import { locateUser } from "@/utils/geoLocation";
 import { useCategories } from "@/composables/useCategories";
 
-export function useListingForm(props) {
-  const isEditMode = props.business?.business_id !== undefined;
+export function useListingForm(props, isEditModeRef) {
+  const isEditMode = computed(() => isEditModeRef.value);
 
   const form = ref({
     name: props.business?.name || "",
@@ -98,10 +98,9 @@ export function useListingForm(props) {
       categoryIds: getChoosenCategoriesID(),
     };
 
-    console.log(business);
-
     if (isEditMode) {
-      // Update business
+      console.log("Update Listing")
+      console.log(business)
     } else {
       await addListing(business);
     }
@@ -159,7 +158,6 @@ export function useListingForm(props) {
 
   return {
     form,
-    isAddressFetchedRef,
     isEditMode,
     listingForm,
     categories,
