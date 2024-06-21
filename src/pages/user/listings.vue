@@ -6,7 +6,7 @@ const { userListings, listingLoading } = useUserListings();
 
 <template>
   <div class="d-flex flex-column ga-4 w-100">
-    <Header />
+    <Header title="Your Listings"/>
     <FilterBar />
     <VRow>
       <VCol lg="4" sm="6" cols="12" v-for="listing in userListings">

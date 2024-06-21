@@ -6,7 +6,7 @@ const { listings, listingLoading } = useListings();
 
 <template>
   <div class="d-flex flex-column ga-4 w-100">
-    <Header />
+    <Header title="All Listings" />
     <FilterBar />
     <VRow>
       <VCol lg="4" sm="6" cols="12" v-for="listing in listings">
