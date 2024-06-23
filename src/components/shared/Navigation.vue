@@ -121,7 +121,7 @@ const authenticate = () => {
         >
           Login
         </VBtn>
-        <NavbarThemeSwitcher class="me-2"/>
+        <NavbarThemeSwitcher class="animate-fade-in-left"/>
         <UserAvatarBadge class="animate-fade-in-left" />
       </div>
       <VAppBarNavIcon

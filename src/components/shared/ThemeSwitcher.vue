@@ -1,5 +1,5 @@
 <script setup>
-import { useCycleList } from "@vueuse/core";
+import { useCycleList, useStorage } from "@vueuse/core";
 import { watch } from "vue";
 import { useTheme } from "vuetify";
 
@@ -23,6 +23,7 @@ const {
 
 const changeTheme = () => {
   globalTheme.name.value = getNextThemeName();
+  useStorage("theme", globalTheme.name.value);
 };
 
 // Update icon if theme is changed from other sources
