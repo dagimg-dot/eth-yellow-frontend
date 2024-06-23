@@ -1,7 +1,7 @@
 <script setup>
 import { useListings } from "@/composables/useListings";
 
-const { listings, listingLoading } = useListings();
+const { listings, listingLoading } = useListings({ type: "all" });
 </script>
 
 <template>
