@@ -1,9 +1,30 @@
-<script setup></script>
+<script setup>
+import { ref, onMounted, onUnmounted } from "vue";
+
+const isNavBarVisible = ref(false);
+
+const handleScroll = () => {
+  if (window.scrollY > 100) {
+    isNavBarVisible.value = true;
+  } else {
+    isNavBarVisible.value = false;
+  }
+};
+
+onMounted(() => {
+  window.addEventListener("scroll", handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll);
+});
+</script>
 
 <template>
   <VApp>
     <VMain>
       <div class="hero">
+        <Navigation v-if="isNavBarVisible" />
         <VLayout max-width="1400px" class="mx-auto">
           <Navigation :isLanding="true" />
           <HomeSection />
