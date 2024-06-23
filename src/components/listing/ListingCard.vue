@@ -48,6 +48,7 @@ const goToDetialsPage = (ev) => {
     <VCard
       class="w-100 cursor-pointer card-hover-effect"
       @click="goToDetialsPage"
+      hover
     >
       <VImg :src="avatar" height="200px" cover />
 
