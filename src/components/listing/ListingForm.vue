@@ -50,6 +50,7 @@ const {
   categoryLoading,
   createLoading,
   locationLoading,
+  updateLoading,
   fetchCategories,
   getLocation,
   addBusiness,
@@ -206,7 +207,7 @@ const {
         <VBtn type="reset" color="secondary" variant="tonal" @click="resetForm">
           Reset
         </VBtn>
-        <VBtn type="submit" :loading="createLoading">
+        <VBtn type="submit" :loading="createLoading || updateLoading">
           {{ isEditMode ? "Update" : "Publish" }}
         </VBtn>
       </VCol>

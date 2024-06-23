@@ -1,0 +1,101 @@
+mutation UpdateBusiness(
+  $business_id: uuid!
+  $name: String
+  $description: String
+  $email: String
+  $phone_number: String
+  $website: String
+  $address: name
+  $city: name
+  $longitude: String
+  $latitude: String
+  $country: name
+  $postal_code: Int
+  $categoryIds: [business_categories_insert_input!]!
+) {
+  update_businesses_by_pk(
+    pk_columns: { business_id: $business_id }
+    _set: {
+      name: $name
+      description: $description
+    }
+  ) {
+    business_id
+    name
+    description
+  }
+
+  update_contact(
+    where: { business_id: { _eq: $business_id } }
+    _set: {
+      email: $email
+      phone_number: $phone_number
+      website: $website
+    }
+  ) {
+    returning {
+      business_id
+      email
+      phone_number
+      website
+    }
+  }
+
+  update_locations(
+    where: { business_id: { _eq: $business_id } }
+    _set: {
+      address: $address
+      city: $city
+      longitude: $longitude
+      latitude: $latitude
+      country: $country
+      postal_code: $postal_code
+    }
+  ) {
+    returning {
+      business_id
+      address
+      city
+      longitude
+      latitude
+      country
+      postal_code
+    }
+  }
+
+  delete_business_categories(
+    where: { business_id: { _eq: $business_id } }
+  ) {
+    affected_rows
+  }
+
+  insert_business_categories(
+    objects: $categoryIds
+  ) {
+    returning {
+      business_id
+      category_id
+    }
+  }
+}
+
+# {
+#   "business_id": "ec558a6a-1719-4344-970e-a88b0e801d91",
+#   "name": "New Business Name",
+#   "description": "Updated description of the business",
+#   "email": "newemail@example.com",
+#   "phone_number": "123-456-7890",
+#   "website": "https://newwebsite.com",
+#   "address": "123 New Address",
+#   "city": "New City",
+#   "longitude": "12.345678",
+#   "latitude": "98.765432",
+#   "country": "New Country",
+#   "postal_code": 12345,
+#   "categoryIds": [
+#     {
+#       "business_id": "ec558a6a-1719-4344-970e-a88b0e801d91",
+#       "category_id": "d36b5b7f-51a1-41be-bb50-4a17f123ef84"
+#     }
+#   ]
+# }

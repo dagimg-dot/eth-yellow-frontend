@@ -5,13 +5,17 @@ import { storeToRefs } from "pinia";
 import { toast } from "vue3-toastify";
 import { GET_LISTINGS } from "@/graphql/queries";
 import { CREATE_LISTING_MUTATION } from "@/graphql/mutations";
+import { UPDATE_LISTING_MUTATION } from "@/graphql/mutations";
 import { parseErrorMessage } from "@/utils/errorParser";
 import { useReverseGeoCode } from "@/composables/useReverseGeoCode";
 import { locateUser } from "@/utils/geoLocation";
 import { useCategories } from "@/composables/useCategories";
+import { useRoute } from "vue-router";
 
 export function useListingForm(props, isEditModeRef) {
   const isEditMode = computed(() => isEditModeRef.value);
+  const route = useRoute();
+  console.log(route.params.id)
 
   const form = ref({
     name: props.business?.name || "",
@@ -42,11 +46,18 @@ export function useListingForm(props, isEditModeRef) {
   };
 
   const getChoosenCategoriesID = () => {
-    return categories.value
-      .filter((category) => form.value.categories.includes(category.name))
-      .map((category) => ({
-        category_id: category.category_id,
-      }));
+    return isEditMode.value
+      ? categories.value
+          .filter((category) => form.value.categories.includes(category.name))
+          .map((category) => ({
+            business_id: route.params.id,
+            category_id: category.category_id,
+          }))
+      : categories.value
+          .filter((category) => form.value.categories.includes(category.name))
+          .map((category) => ({
+            category_id: category.category_id,
+          }));
   };
 
   const { fetchCategories, categories, categoryLoading } = useCategories();
@@ -86,6 +97,41 @@ export function useListingForm(props, isEditModeRef) {
     resetForm();
   });
 
+  const {
+    mutate: updateListing,
+    loading: updateLoading,
+    onError: onUpdateError,
+    onDone: onUpdateDone,
+  } = useMutation(UPDATE_LISTING_MUTATION, {
+    context: {
+      authRequired: true,
+    },
+    /*     update: (cache, { data }) => {
+      const oldListings = cache.readQuery({ query: GET_LISTINGS });
+      if (data?.update_businesses_by_pk && oldListings) {
+        const updatedListing = data.update_businesses_by_pk;
+        const updatedListings = oldListings.businesses.map((listing) =>
+          listing.id === updatedListing.id ? updatedListing : listing
+        );
+        cache.writeQuery({
+          query: GET_LISTINGS,
+          data: {
+            businesses: updatedListings,
+          },
+        });
+      }
+    }, */
+  });
+
+  onUpdateError((error) => {
+    const parsedError = parseErrorMessage(error.message);
+    toast.error(parsedError);
+  });
+
+  onUpdateDone(() => {
+    toast.success("Business updated successfully");
+  });
+
   const addBusiness = async () => {
     const { valid } = await listingForm.value.validate();
 
@@ -95,13 +141,18 @@ export function useListingForm(props, isEditModeRef) {
 
     const business = {
       owner_id: user.value.user_id,
+      business_id: route.params.id,
       ...form.value,
       categoryIds: getChoosenCategoriesID(),
     };
 
+    console.log(getChoosenCategoriesID());
+    console.log(categories.value)
+
     if (isEditMode.value) {
       console.log("Update Listing");
       console.log(business);
+      await updateListing(business);
     } else {
       await addListing(business);
     }
@@ -163,6 +214,7 @@ export function useListingForm(props, isEditModeRef) {
     listingForm,
     categories,
     categoryLoading,
+    updateLoading,
     createLoading,
     locationLoading,
     fetchCategories,
