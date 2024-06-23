@@ -61,7 +61,8 @@ export function useListingForm(props, isEditModeRef) {
       authRequired: true,
     },
     update: (cache, { data }) => {
-      if (data?.insert_businesses_one) {
+      const oldListings = cache.readQuery({ query: GET_LISTINGS });
+      if (data?.insert_businesses_one && oldListings) {
         cache.writeQuery({
           query: GET_LISTINGS,
           data: {
@@ -98,9 +99,9 @@ export function useListingForm(props, isEditModeRef) {
       categoryIds: getChoosenCategoriesID(),
     };
 
-    if (isEditMode) {
-      console.log("Update Listing")
-      console.log(business)
+    if (isEditMode.value) {
+      console.log("Update Listing");
+      console.log(business);
     } else {
       await addListing(business);
     }
