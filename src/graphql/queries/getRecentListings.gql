@@ -1,0 +1,11 @@
+query GetRecentListings {
+  businesses(limit: 3, order_by: { created_at: desc }) {
+    business_id
+    name
+    description
+    locations {
+      city
+      country
+    }
+  }
+}

@@ -3,8 +3,9 @@ import { ref } from "vue";
 
 export const useListingStore = defineStore("filter", () => {
   const listings = ref([]);
-  const listing = ref({});
   const userListings = ref([]);
+  const recentListings = ref([]);
+  const listing = ref({});
   const loading = ref(false);
 
   function setListings(newListings) {
@@ -16,6 +17,12 @@ export const useListingStore = defineStore("filter", () => {
   function setUserListings(newListings) {
     if (newListings) {
       userListings.value = newListings;
+    }
+  }
+
+  function setRecentListings(newListings) {
+    if (newListings) {
+      recentListings.value = newListings;
     }
   }
 
@@ -31,10 +38,12 @@ export const useListingStore = defineStore("filter", () => {
 
   return {
     listings,
-    listing,
     userListings,
+    recentListings,
+    listing,
     loading,
     setListings,
+    setRecentListings,
     setListing,
     setLoading,
     setUserListings,

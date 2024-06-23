@@ -4,6 +4,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  sortOption: {
+    type: Boolean,
+    default: true,
+  },
 });
 </script>
 
@@ -11,7 +15,7 @@ const props = defineProps({
   <VCol>
     <VRow justify="space-between">
       <div class="text-h5 text-lg-h4 font-weight-bold">{{ props.title }}</div>
-      <SortMenu />
+      <SortMenu v-if="props.sortOption"/>
     </VRow>
   </VCol>
 </template>
