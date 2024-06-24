@@ -45,7 +45,6 @@ export function useUserListings() {
     GET_USER_LISTINGS,
     {
       owner_id: user.value.user_id,
-      offset: listingsLength.value,
     },
     {
       context: {

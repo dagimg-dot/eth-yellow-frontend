@@ -62,17 +62,11 @@ export function useListings({ type }) {
     loading: listingLoading,
     onError: onListingError,
     fetchMore,
-  } = useQuery(
-    getQuery(type),
-    {
-      offset: listingsLength.value,
+  } = useQuery(getQuery(type), {
+    context: {
+      authRequired: false,
     },
-    {
-      context: {
-        authRequired: false,
-      },
-    }
-  );
+  });
 
   watch(listingResult, (newResult) => {
     listingsLength.value = newResult?.businesses?.length;
