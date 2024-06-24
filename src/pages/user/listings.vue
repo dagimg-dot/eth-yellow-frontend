@@ -22,15 +22,17 @@ const {
         />
       </VCol>
     </VRow>
-    <VContainer>
-      <VBtn
-        v-if="isLoadMoreBtnVisible"
-        @click="loadMoreUserListings"
-        variant="text"
-        block
-        >Load More</VBtn
-      >
-    </VContainer>
+    <div class="d-flex justify-center mt-6">
+      <div>
+        <VBtn
+          v-if="isLoadMoreBtnVisible"
+          @click="loadMoreUserListings"
+          variant="text"
+          block
+          >Load More</VBtn
+        >
+      </div>
+    </div>
   </div>
 </template>
 
