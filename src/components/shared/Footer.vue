@@ -1,9 +1,9 @@
 <script></script>
 
 <template>
-  <VFooter dark padless class="mt-16 pa-8">
+  <VFooter dark padless class="mt-16 px-8 pt-8">
     <VCard flat tile width="100%" class="">
-      <VLayout max-width="1400px" class="mx-auto">
+      <VLayout max-width="1400px" class="mx-auto mb-6">
         <VRow class="d-flex justify-center">
           <VCol
             cols="12"
@@ -71,6 +71,10 @@
           </VCol>
         </VRow>
       </VLayout>
+      <VDivider />
+      <div class="text-center my-2">
+        <span>&copy; {{ new Date().getFullYear() }} ethyellow. All Rights Reserved.</span>
+      </div>
     </VCard>
   </VFooter>
 </template>
