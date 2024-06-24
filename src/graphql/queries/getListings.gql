@@ -1,5 +1,5 @@
-query GetListings {
-  businesses {
+query GetListings($offset: Int) {
+  businesses(limit: 3, offset: $offset) {
     business_id
     name
     description

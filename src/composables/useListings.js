@@ -1,4 +1,4 @@
-import { watch } from "vue";
+import { ref, unref, watch } from "vue";
 import { useQuery } from "@vue/apollo-composable";
 import { toast } from "vue3-toastify";
 import { useListingStore } from "@/store/modules/listingStore";
@@ -33,18 +33,48 @@ const setListings = (type, store, listings) => {
 export function useListings({ type }) {
   const listingStore = useListingStore();
   const { listings, recentListings } = storeToRefs(listingStore);
+  const listingsLength = ref(listings.value.length);
+
+  const loadMoreListings = () => {
+    fetchMore({
+      variables: {
+        offset: listingsLength.value,
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        if (!fetchMoreResult) {
+          return previousResult;
+        }
+        return {
+          ...previousResult,
+          businesses: [
+            ...previousResult.businesses,
+            ...fetchMoreResult.businesses,
+          ],
+        };
+      },
+    });
+  };
 
   const {
     result: listingResult,
     loading: listingLoading,
     onError: onListingError,
-  } = useQuery(getQuery(type), null, {
-    context: {
-      authRequired: false,
+    fetchMore,
+  } = useQuery(
+    getQuery(type),
+    {
+      offset: listingsLength.value,
     },
-  });
+    {
+      context: {
+        authRequired: false,
+      },
+    }
+  );
 
   watch(listingResult, (newResult) => {
+    listingsLength.value = newResult?.businesses?.length;
+    console.log("listings length: ", listingsLength.value);
     setListings(type, listingStore, newResult?.businesses);
   });
 
@@ -52,16 +82,18 @@ export function useListings({ type }) {
     toast.error("Failed to fetch listings, ", error.message);
   });
 
-  switch(type) {
+  switch (type) {
     case "all":
       return {
         listings,
         listingLoading,
+        loadMoreListings,
       };
     case "recent":
       return {
         recentListings,
         listingLoading,
+        loadMoreListings,
       };
   }
 }
