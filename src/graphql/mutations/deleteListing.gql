@@ -1,0 +1,14 @@
+mutation DeleteListing($business_id: uuid!) {
+  delete_business_categories(where: { business_id: { _eq: $business_id } }) {
+    affected_rows
+  }
+  delete_locations(where: { business_id: { _eq: $business_id } }) {
+    affected_rows
+  }
+  delete_contact(where: { business_id: { _eq: $business_id } }) {
+    affected_rows
+  }
+  delete_businesses_by_pk(business_id: $business_id) {
+    business_id
+  }
+}

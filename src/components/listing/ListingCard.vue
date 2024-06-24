@@ -4,6 +4,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 
 const isLiked = ref(false);
+const deleteDialogVisible = ref(false);
 const router = useRouter();
 
 const trimText = (text, length) => {
@@ -31,6 +32,8 @@ const props = defineProps({
   },
 });
 
+const emit = defineEmits(["delete"]);
+
 const goToDetialsPage = (ev) => {
   if (
     ev.target.nodeName == "BUTTON" ||
@@ -40,6 +43,11 @@ const goToDetialsPage = (ev) => {
     return;
 
   router.push(`/listings/${props.listing.business_id}`);
+};
+
+const listingDetail = {
+  name: props.listing.name,
+  id: props.listing.business_id,
 };
 </script>
 
@@ -69,16 +77,21 @@ const goToDetialsPage = (ev) => {
               {{ trimText(props.listing.description, 90) }}
             </p>
           </div>
-          <div v-if="isAllowed" class="d-flex flex-column">
+          <div v-if="props.isAllowed" class="d-flex flex-column">
             <VBtn
               icon="bx-edit"
               variant="text"
-              :to="`/listings/edit/${listing.business_id}`"
+              :to="`/listings/edit/${props.listing.business_id}`"
             />
-            <VBtn icon="bx-trash" variant="text" color="error" />
+            <VBtn
+              icon="bx-trash"
+              variant="text"
+              color="error"
+              @click="deleteDialogVisible = true"
+            />
           </div>
           <VBtn
-            v-if="!isAllowed"
+            v-if="!props.isAllowed"
             :icon="isLiked ? 'iconamoon-like-fill' : 'iconamoon-like-light'"
             size="large"
             @click="isLiked = !isLiked"
@@ -86,6 +99,11 @@ const goToDetialsPage = (ev) => {
           />
         </div>
       </VCardText>
+      <DeleteModal
+        :dialog="deleteDialogVisible"
+        :listingDetail="listingDetail"
+        @update:dialog="deleteDialogVisible = $event"
+      />
     </VCard>
   </VSkeletonLoader>
 </template>
