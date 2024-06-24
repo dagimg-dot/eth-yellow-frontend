@@ -35,6 +35,7 @@ onUnmounted(() => {
         <FooterCTA />
       </VLayout>
     </VMain>
+    <Footer />
   </VApp>
 </template>
 

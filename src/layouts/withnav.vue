@@ -6,6 +6,7 @@
         <RouterView />
       </VLayout>
     </VMain>
+    <Footer />
   </VApp>
 </template>
 
