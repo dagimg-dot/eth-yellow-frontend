@@ -1,5 +1,8 @@
 <script setup>
-import { useDeleteListing } from "@/composables/useDeleteListing";
+3;
+import { DELETE_LISTING_MUTATION } from "@/graphql/mutations";
+import { GET_USER_LISTINGS } from "@/graphql/queries";
+import { useMutation } from "@vue/apollo-composable";
 import { ref, defineEmits, computed } from "vue";
 import { toast } from "vue3-toastify";
 
@@ -15,7 +18,6 @@ const props = defineProps({
 });
 
 const emit = defineEmits(["update:dialog"]);
-const { executeDelete, loading, error } = useDeleteListing();
 
 const name = ref("");
 
@@ -23,20 +25,52 @@ const closeDialog = () => {
   emit("update:dialog", false);
 };
 
+const {
+  mutate: deleteBusiness,
+  loading,
+  onError,
+  onDone,
+} = useMutation(DELETE_LISTING_MUTATION, {
+  context: {
+    authRequired: true,
+  },
+  update: (cache, { data }) => {
+    const oldUserListings = cache.readQuery({
+      query: GET_USER_LISTINGS,
+    });
+    console.log("oldUserListings: ", oldUserListings);
+    console.log("data: ", data);
+    if (data?.delete_businesses_by_pk && oldUserListings) {
+      const newListings = oldUserListings.bussinesses.filter(
+        (listing) => listing.id !== data.delete_businesses_by_pk.business_id
+      );
+      cache.writeQuery({
+        query: GET_USER_LISTINGS,
+        data: {
+          businesses: newListings,
+        },
+      });
+    }
+  },
+});
+
+onDone(() => {
+  toast.success("Listing deleted successfully");
+  closeDialog();
+});
+
+onError(() => {
+  toast.error("An error occurred when trying to delete listing");
+});
+
 const deleteListing = async () => {
   if (name.value !== props.listingDetail.name || name.value === "") {
     return;
   }
   console.log("Deleting listing: ", props.listingDetail.id);
-
-  try {
-    await executeDelete(props.listingDetail.id);
-
-    toast.success("Listing deleted successfully");
-    closeDialog();
-  } catch (err) {
-    toast.error("An error occurred when trying to delete listing");
-  }
+  await deleteBusiness({
+    business_id: props.listingDetail.id,
+  });
 };
 
 const dialogRef = computed({
@@ -54,8 +88,7 @@ const nameRules = [
 
 <template>
   <div class="text-center pa-4">
-    <VDialog v-model="dialogRef" width="auto"
-      >s
+    <VDialog v-model="dialogRef" width="auto">
       <VCard
         max-width="400"
         prepend-icon="mdi-trash"
