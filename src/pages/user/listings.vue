@@ -1,6 +1,5 @@
 <script setup>
 import { useUserListings } from "@/composables/useUserListings";
-import { computed } from "vue";
 
 const {
   userListings,
