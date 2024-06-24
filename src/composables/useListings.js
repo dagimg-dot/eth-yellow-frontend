@@ -34,6 +34,7 @@ export function useListings({ type }) {
   const listingStore = useListingStore();
   const { listings, recentListings } = storeToRefs(listingStore);
   const listingsLength = ref(listings.value.length);
+  const isLoadMoreBtnVisible = ref(true);
 
   const loadMoreListings = () => {
     fetchMore({
@@ -41,11 +42,12 @@ export function useListings({ type }) {
         offset: listingsLength.value,
       },
       updateQuery: (previousResult, { fetchMoreResult }) => {
-        if (!fetchMoreResult) {
+        if (fetchMoreResult?.businesses.length == 0) {
+          toast.info("No more listings to load");
+          isLoadMoreBtnVisible.value = false;
           return previousResult;
         }
         return {
-          ...previousResult,
           businesses: [
             ...previousResult.businesses,
             ...fetchMoreResult.businesses,
@@ -74,7 +76,6 @@ export function useListings({ type }) {
 
   watch(listingResult, (newResult) => {
     listingsLength.value = newResult?.businesses?.length;
-    console.log("listings length: ", listingsLength.value);
     setListings(type, listingStore, newResult?.businesses);
   });
 
@@ -88,12 +89,12 @@ export function useListings({ type }) {
         listings,
         listingLoading,
         loadMoreListings,
+        isLoadMoreBtnVisible,
       };
     case "recent":
       return {
         recentListings,
         listingLoading,
-        loadMoreListings,
       };
   }
 }

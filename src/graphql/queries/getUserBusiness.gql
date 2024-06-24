@@ -1,5 +1,9 @@
-query GetUserBusiness($owner_id: uuid!) {
-  businesses(where: { owner_id: { _eq: $owner_id } }) {
+query GetUserBusiness($owner_id: uuid!, $offset: Int) {
+  businesses(
+    where: { owner_id: { _eq: $owner_id } }
+    limit: 3
+    offset: $offset
+  ) {
     business_id
     name
     description

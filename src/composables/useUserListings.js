@@ -1,4 +1,4 @@
-import { watch } from "vue";
+import { ref, watch } from "vue";
 import { useQuery } from "@vue/apollo-composable";
 import { toast } from "vue3-toastify";
 import { useAuthStore } from "@/store/modules/auth";
@@ -11,15 +11,41 @@ export function useUserListings() {
   const listingStore = useListingStore();
   const { userListings } = storeToRefs(listingStore);
   const { user } = storeToRefs(authStore);
+  const listingsLength = ref(userListings.value.length);
+  const isLoadMoreBtnVisible = ref(true);
+
+  const loadMoreUserListings = () => {
+    fetchMore({
+      variables: {
+        owner_id: user.value.user_id,
+        offset: listingsLength.value,
+      },
+      updateQuery: (previousResult, { fetchMoreResult }) => {
+        if (fetchMoreResult?.businesses.length == 0) {
+          toast.info("No more listings to load");
+          isLoadMoreBtnVisible.value = false;
+          return previousResult;
+        }
+        return {
+          businesses: [
+            ...previousResult.businesses,
+            ...fetchMoreResult.businesses,
+          ],
+        };
+      },
+    });
+  };
 
   const {
     result: listingResult,
     loading: listingLoading,
     onError: onListingError,
+    fetchMore,
   } = useQuery(
     GET_USER_LISTINGS,
     {
       owner_id: user.value.user_id,
+      offset: listingsLength.value,
     },
     {
       context: {
@@ -29,6 +55,7 @@ export function useUserListings() {
   );
 
   watch(listingResult, (newResult) => {
+    listingsLength.value = newResult?.businesses.length;
     listingStore.setUserListings(newResult?.businesses);
   });
 
@@ -38,6 +65,8 @@ export function useUserListings() {
 
   return {
     userListings,
+    loadMoreUserListings,
+    isLoadMoreBtnVisible,
     listingLoading,
   };
 }

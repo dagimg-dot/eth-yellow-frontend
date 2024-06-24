@@ -2,9 +2,10 @@
 import { useListings } from "@/composables/useListings";
 import { VBtn } from "vuetify/lib/components/index.mjs";
 
-const { listings, listingLoading, loadMoreListings } = useListings({
-  type: "all",
-});
+const { listings, listingLoading, loadMoreListings, isLoadMoreBtnVisible } =
+  useListings({
+    type: "all",
+  });
 </script>
 
 <template>
@@ -21,7 +22,13 @@ const { listings, listingLoading, loadMoreListings } = useListings({
       </VCol>
     </VRow>
     <VContainer>
-      <VBtn @click="loadMoreListings" variant="text" block>Load More</VBtn>
+      <VBtn
+        v-if="isLoadMoreBtnVisible"
+        @click="loadMoreListings"
+        variant="text"
+        block
+        >Load More</VBtn
+      >
     </VContainer>
   </div>
 </template>
