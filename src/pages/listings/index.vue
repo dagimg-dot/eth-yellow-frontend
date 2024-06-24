@@ -1,6 +1,5 @@
 <script setup>
 import { useListings } from "@/composables/useListings";
-import { VBtn } from "vuetify/lib/components/index.mjs";
 
 const { listings, listingLoading, loadMoreListings, isLoadMoreBtnVisible } =
   useListings({
