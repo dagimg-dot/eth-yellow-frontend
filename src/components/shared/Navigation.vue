@@ -46,11 +46,11 @@ const authenticate = () => {
   <nav>
     <VNavigationDrawer
       temporary
-      location="end"
+      location="top"
       v-model:model-value="drawer"
       class="nav-drawer"
     >
-      <VContainer class="d-flex flex-column justify-space-between h-screen">
+      <VContainer class="d-flex flex-column justify-space-between">
         <VList variant="plain">
           <VListItem>
             <RouterLink to="/" class="text-decoration-none text-primary">
