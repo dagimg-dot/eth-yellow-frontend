@@ -40,7 +40,6 @@ onUnmounted(() => {
         </VLayout>
       </div>
       <VLayout max-width="1400px" class="mx-auto d-block pa-4 pa-lg-4">
-        <FeatureSection />
         <RecentListings />
         <FooterCTA />
       </VLayout>
