@@ -92,7 +92,7 @@ const authenticate = () => {
     <VAppBar
       :color="props.isLanding ? 'transparent' : 'grey-50'"
       flat
-      class="rounded-t-0 rounded-b-lg"
+      class="rounded-t-0 rounded-b-lg animate-fade-in-top"
     >
       <CompanyCard class="animate-fade-in-right" />
       <VSpacer />
@@ -121,7 +121,7 @@ const authenticate = () => {
         >
           Login
         </VBtn>
-        <NavbarThemeSwitcher class="animate-fade-in-left"/>
+        <NavbarThemeSwitcher class="animate-fade-in-left" />
         <UserAvatarBadge class="animate-fade-in-left" />
       </div>
       <VAppBarNavIcon
