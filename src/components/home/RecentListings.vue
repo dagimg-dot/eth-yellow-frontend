@@ -6,7 +6,11 @@ const { recentListings, listingLoading } = useListings({ type: "recent" });
 
 <template>
   <section class="d-flex flex-column ga-4 w-100 my-16">
-    <Header title="Recent Listings" :sortOption="false" class="mb-10"/>
+    <VRow>
+      <VCol cols="12" class="mb-8">
+        <h2 class="text-h4 text-center font-weight-bold">Recent Listings</h2>
+      </VCol>
+    </VRow>
     <VRow>
       <VCol lg="4" sm="6" cols="12" v-for="listing in recentListings">
         <ListingCard
