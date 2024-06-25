@@ -2,12 +2,21 @@
 import { ref, onMounted, onUnmounted } from "vue";
 
 const isNavBarVisible = ref(false);
+const heroSection = ref(null);
 
 const handleScroll = () => {
-  if (window.scrollY > 100) {
+  const scrollY = window.scrollY;
+  const windowHeight = window.innerHeight;
+  const opacity = Math.max(1 - scrollY / (windowHeight * 0.8), 0);
+
+  if (scrollY > 100) {
     isNavBarVisible.value = true;
   } else {
     isNavBarVisible.value = false;
+  }
+
+  if (heroSection.value) {
+    heroSection.value.style.opacity = opacity.toString();
   }
 };
 
@@ -23,8 +32,8 @@ onUnmounted(() => {
 <template>
   <VApp>
     <VMain>
-      <div class="hero">
-        <Navigation v-if="isNavBarVisible" />
+      <Navigation v-if="isNavBarVisible" />
+      <div class="hero" ref="heroSection">
         <VLayout max-width="1400px" class="mx-auto">
           <Navigation :isLanding="true" />
           <HomeSection />
