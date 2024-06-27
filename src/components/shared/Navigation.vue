@@ -9,6 +9,7 @@ const isXs = ref(false);
 const drawer = ref(null);
 const authStore = useAuthStore();
 const route = useRoute();
+const isAuthPage = route.fullPath.includes("/auth");
 const { isLoggedIn } = storeToRefs(authStore);
 
 const onResize = () => {
@@ -104,23 +105,24 @@ const authenticate = () => {
       </nav>
       <VSpacer />
       <div class="d-flex ga-6 align-center" v-if="!isXs">
-        <VBtn
-          variant="outlined"
-          to="/listings/add"
-          class="animate-fade-in-left"
-          v-show="route.fullPath !== '/listings/add'"
-        >
-          Add Your Business
-        </VBtn>
-
-        <VBtn
-          v-if="!isLoggedIn"
-          to="/auth/login"
-          variant="elevated"
-          class="animate-fade-in-left"
-        >
-          Login
-        </VBtn>
+        <div v-if="!isAuthPage" class="d-flex ga-6 align-center">
+          <VBtn
+            variant="outlined"
+            to="/listings/add"
+            class="animate-fade-in-left"
+            v-show="route.fullPath !== '/listings/add'"
+          >
+            Add Your Business
+          </VBtn>
+          <VBtn
+            v-if="!isLoggedIn"
+            to="/auth/login"
+            variant="elevated"
+            class="animate-fade-in-left"
+          >
+            Login
+          </VBtn>
+        </div>
         <NavbarThemeSwitcher class="animate-fade-in-left" />
         <UserAvatarBadge class="animate-fade-in-left" />
       </div>
