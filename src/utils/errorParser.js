@@ -22,4 +22,18 @@ const parseErrorMessage = (errorMessage) => {
   }
 };
 
-export { parseErrorMessage };
+const mergeErrorsMessage = (errors) => {
+  let errMessage = "";
+
+  if (errors.length === 1) {
+    return errors[0].message;
+  }
+
+  errors.forEach((err) => {
+    errMessage += err.message + ", ";
+  });
+
+  return errMessage;
+};
+
+export { parseErrorMessage, mergeErrorsMessage };

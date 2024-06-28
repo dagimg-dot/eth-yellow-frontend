@@ -1,20 +1,7 @@
 import { useMutation } from "@vue/apollo-composable";
 import { ref } from "vue";
 import LOGIN_MUTATION from "@/graphql/mutations/login.gql";
-
-const mergeErrorsMessage = (errors) => {
-  let errMessage = "";
-
-  if (errors.length === 1) {
-    return errors[0].message;
-  }
-
-  errors.forEach((err) => {
-    errMessage += err.message + ", ";
-  });
-
-  return errMessage;
-};
+import { mergeErrorsMessage } from "@/utils/errorParser";
 
 export function useLogin() {
   const loading = ref(false);

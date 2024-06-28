@@ -1,20 +1,7 @@
 import { useMutation } from "@vue/apollo-composable";
 import { ref } from "vue";
 import SIGNUP_MUTATION from "@/graphql/mutations/signup.gql";
-
-const mergeErrorsMessage = (errors) => {
-  let errMessage = "";
-
-  if (errors.length === 1) {
-    return errors[0].message;
-  }
-
-  errors.forEach((err) => {
-    errMessage += err.message + ", ";
-  });
-
-  return errMessage;
-};
+import { mergeErrorsMessage } from "@/utils/errorParser";
 
 export function useSignup() {
   const loading = ref(false);
@@ -38,7 +25,7 @@ export function useSignup() {
         password,
         first_name: "",
         last_name: "",
-        phone_number: ""
+        phone_number: "",
       });
       const { signup: signupData } = response.data;
       if (signupData.errors.length > 0) {
