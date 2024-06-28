@@ -26,6 +26,8 @@ onUserError(() => {
 
 const userDetails = computed(() => userResult.value?.users[0] ?? {});
 
+const changeDialogVisible = ref(false);
+
 const form = ref({
   first_name: "",
   last_name: "",
@@ -45,6 +47,7 @@ onUserResult(() => {
 });
 
 const isAccountDeactivated = ref(false);
+const passwordForgotten = ref(false);
 
 const deleteAccount = () => {
   console.log("Account deleted");
@@ -212,6 +215,7 @@ const updateProfile = async () => {
                 <VTextField
                   v-model="form.email"
                   label="E-mail"
+                  disabled
                   :loading="userLoading"
                   :rules="ListingRules.emailRules"
                   placeholder="alemu.dinku@gmail.com"
@@ -250,27 +254,53 @@ const updateProfile = async () => {
       </VCard>
     </VCol>
     <VCol cols="12">
-      <VCard title="Delete Account">
-        <VCardText>
-          <div>
-            <VCheckbox
-              v-model="isAccountDeactivated"
-              label="I confirm my account deletion"
-            />
-          </div>
+      <VCard title="Account Actions">
+        <VRow>
+          <VCol md="6" cols="12">
+            <VCardText>
+              <div>
+                <VCheckbox
+                  v-model="isAccountDeactivated"
+                  label="I confirm my account deletion"
+                />
+              </div>
 
-          <VBtn
-            :disabled="!isAccountDeactivated"
-            color="error"
-            class="mt-3"
-            @click="deleteAccount"
-          >
-            Delete Account
-          </VBtn>
-        </VCardText>
+              <VBtn
+                :disabled="!isAccountDeactivated"
+                color="error"
+                class="mt-3"
+                @click="deleteAccount"
+              >
+                Delete Account
+              </VBtn>
+            </VCardText>
+          </VCol>
+          <VCol md="6" cols="12">
+            <VCardText>
+              <div>
+                <VCheckbox
+                  v-model="passwordForgotten"
+                  label="I need to update my password"
+                />
+              </div>
+              <VBtn
+                :disabled="!passwordForgotten"
+                class="mt-3"
+                @click="changeDialogVisible = true"
+              >
+                <VIcon icon="bx-lock" class="mr-2" />
+                Change Password
+              </VBtn>
+            </VCardText>
+          </VCol>
+        </VRow>
       </VCard>
     </VCol>
   </VRow>
+  <ResetPasswordModal
+    :dialog="changeDialogVisible"
+    @change:dialog="changeDialogVisible = $event"
+  />
 </template>
 
 <route lang="yaml">
