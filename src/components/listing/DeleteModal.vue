@@ -3,7 +3,7 @@
 import { DELETE_LISTING_MUTATION } from "@/graphql/mutations";
 import { GET_USER_LISTINGS } from "@/graphql/queries";
 import { useMutation } from "@vue/apollo-composable";
-import { ref, defineEmits, computed } from "vue";
+import { ref, computed } from "vue";
 import { toast } from "vue3-toastify";
 
 const props = defineProps({

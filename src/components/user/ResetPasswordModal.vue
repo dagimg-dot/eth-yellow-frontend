@@ -1,6 +1,6 @@
 <script setup>
 import { useUpdatePassword } from "@/composables/useUpdatePassword";
-import { defineEmits, computed, ref, reactive } from "vue";
+import { computed, ref, reactive } from "vue";
 import { toast } from "vue3-toastify";
 
 const props = defineProps({
