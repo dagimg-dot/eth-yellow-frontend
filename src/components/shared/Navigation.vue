@@ -141,7 +141,7 @@ const authenticate = () => {
 
 .nav-fix {
   padding-left: -10px;
-  margin-right: 8.5rem;
+  margin-right: 9.4rem;
 }
 
 .nav-drawer {
