@@ -97,7 +97,7 @@ const authenticate = () => {
     >
       <CompanyCard class="animate-fade-in-right" />
       <VSpacer />
-      <nav v-if="!isXs" class="main-nav">
+      <nav v-if="!isXs" :class="isAuthPage ? 'nav-fix': ''">
         <VBtn to="/">Home</VBtn>
         <VBtn to="/listings">Listings</VBtn>
         <VBtn to="/services">Services</VBtn>
@@ -138,6 +138,11 @@ const authenticate = () => {
 
 <style scoped lang="scss">
 @use "@/scss/animation.scss" as *;
+
+.nav-fix {
+  padding-left: -10px;
+  margin-right: 8.5rem;
+}
 
 .nav-drawer {
   background-color: rgba(0, 0, 0, 0.5);
