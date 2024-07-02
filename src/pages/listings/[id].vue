@@ -6,35 +6,36 @@ import { useRoute, useRouter } from "vue-router";
 import { ref } from "vue";
 
 const route = useRoute();
-const router = useRouter();
 
 const { listing, listingLoading } = useListing(route.params.id);
 
-const currentPath = route.path;
+const descRef = ref(null);
+const locRef = ref(null);
+const contactRef = ref(null);
+const reviewRef = ref(null);
 
-const changeHash = async (hash) => {
-  router.push({
-    path: currentPath,
-    hash: `#${hash}`,
-  });
-
-  if (hash === "description") {
-    descRef.value.scrollIntoView({ behavior: "smooth" });
-  } else if (hash === "location") {
-    locRef.value.scrollIntoView({ behavior: "smooth" });
-  } else if (hash === "contact") {
-    contactRef.value.scrollIntoView({ behavior: "smooth" });
+const changeHash = (hash) => {
+  switch (hash) {
+    case "description":
+      descRef.value?.scrollIntoView({ behavior: "smooth" });
+      break;
+    case "location":
+      locRef.value?.scrollIntoView({ behavior: "smooth" });
+      break;
+    case "contact":
+      contactRef.value?.scrollIntoView({ behavior: "smooth" });
+      break;
+    case "reviews":
+      reviewRef.value?.scrollIntoView({ behavior: "smooth" });
+      break;
+    default:
+      break;
   }
 };
 
 const isLiked = ref(false);
 const activeTab = ref(route.hash);
 
-const descRef = ref(null);
-const locRef = ref(null);
-const contactRef = ref(null);
-
-// tabs
 const tabs = [
   {
     title: "Description",
@@ -50,6 +51,11 @@ const tabs = [
     title: "Contact",
     icon: "ic-outline-contact-support",
     tab: "contact",
+  },
+  {
+    title: "Reviews",
+    icon: "bx-star",
+    tab: "reviews",
   },
 ];
 </script>
@@ -103,75 +109,86 @@ const tabs = [
       </VTabs>
     </VCard>
     <VDivider />
-    <VCard :ref="descRef">
-      <VCardTitle class="text-h5 font-weight-bold"> Description </VCardTitle>
-      <VCardText class="text-body text-lg-h6 text-md-h6">
-        {{ listing.description }}
-      </VCardText>
-    </VCard>
-    <VCard :ref="locRef">
-      <VCardTitle class="text-h5 font-weight-bold"> Location </VCardTitle>
-      <div
-        class="pa-4 overflow-auto d-lg-flex d-md-flex ga-4 justify-space-between d-block"
-      >
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d43109.46404148012!2d6.139331415419217!3d47.52221401973193!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47928c21dbead7ab%3A0x409ce34b30f0970!2s70230%20Filain!5e0!3m2!1sen!2sfr!4v1640189073328!5m2!1sen!2sfr"
-          height="450"
-          style="border: 0"
-          allowfullscreen=""
-          loading="lazy"
-          class="w-100 w-lg-50 w-md-50"
-        ></iframe>
-        <VCol class="d-flex flex-column ga-10">
-          <span class="text-h6 mb-4 text-center d-block font-weight-bold"
-            >More info</span
-          >
-          <div class="d-flex justify-space-between">
-            <div class="text-lg-h6 text-md-h6">Address</div>
-            <div class="text-lg-h6 text-md-h6">
-              {{ listing.locations?.[0]?.address }}
+    <section ref="descRef">
+      <VCard>
+        <VCardTitle class="text-h5 font-weight-bold"> Description </VCardTitle>
+        <VCardText class="text-body text-lg-h6 text-md-h6">
+          {{ listing.description }}
+        </VCardText>
+      </VCard>
+    </section>
+    <section ref="locRef">
+      <VCard>
+        <VCardTitle class="text-h5 font-weight-bold"> Location </VCardTitle>
+        <div
+          class="pa-4 overflow-auto d-lg-flex d-md-flex ga-4 justify-space-between d-block"
+        >
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d43109.46404148012!2d6.139331415419217!3d47.52221401973193!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47928c21dbead7ab%3A0x409ce34b30f0970!2s70230%20Filain!5e0!3m2!1sen!2sfr!4v1640189073328!5m2!1sen!2sfr"
+            height="450"
+            style="border: 0"
+            allowfullscreen=""
+            loading="lazy"
+            class="w-100 w-lg-50 w-md-50"
+          ></iframe>
+          <VCol class="d-flex flex-column ga-10">
+            <span class="text-h6 mb-4 text-center d-block font-weight-bold"
+              >More info</span
+            >
+            <div class="d-flex justify-space-between">
+              <div class="text-lg-h6 text-md-h6">Address</div>
+              <div class="text-lg-h6 text-md-h6">
+                {{ listing.locations?.[0]?.address }}
+              </div>
             </div>
-          </div>
-          <div class="d-flex justify-space-between">
-            <div class="text-lg-h6 text-md-h6">City</div>
-            <div class="text-lg-h6 text-md-h6">
-              {{ listing.locations?.[0]?.city }}
+            <div class="d-flex justify-space-between">
+              <div class="text-lg-h6 text-md-h6">City</div>
+              <div class="text-lg-h6 text-md-h6">
+                {{ listing.locations?.[0]?.city }}
+              </div>
             </div>
-          </div>
-          <div class="d-flex justify-space-between">
-            <div class="text-lg-h6 text-md-h6">Country</div>
-            <div class="text-lg-h6 text-md-h6">
-              {{ listing.locations?.[0]?.country }}
+            <div class="d-flex justify-space-between">
+              <div class="text-lg-h6 text-md-h6">Country</div>
+              <div class="text-lg-h6 text-md-h6">
+                {{ listing.locations?.[0]?.country }}
+              </div>
             </div>
-          </div>
+          </VCol>
+        </div>
+      </VCard>
+    </section>
+    <section ref="contactRef">
+      <VCard>
+        <VCardTitle class="text-h5 font-weight-bold"> Contact </VCardTitle>
+        <VCol
+          class="d-md-flex d-lg-flex ga-16 flex-column flex-lg-row flex-md-row"
+        >
+          <VCard class="d-flex ga-2 flex-column w-100 align-center mt-4">
+            <VIcon icon="bx-phone" size="24" />
+            <span class="text-lg-h6 text-md-h6">
+              {{ listing.contact_details?.[0]?.phone_number }}</span
+            >
+          </VCard>
+          <VCard class="d-flex ga-2 flex-column w-100 align-center mt-4">
+            <VIcon icon="bx-mail-send" size="24" />
+            <span class="text-lg-h6 text-md-h6">{{
+              listing.contact_details?.[0]?.email
+            }}</span>
+          </VCard>
+          <VCard class="d-flex ga-2 flex-column w-100 align-center mt-4">
+            <VIcon icon="bx-globe" size="24" />
+            <span class="text-lg-h6 text-md-h6">{{
+              listing.contact_details?.[0]?.website
+            }}</span>
+          </VCard>
         </VCol>
-      </div>
-    </VCard>
-    <VCard :ref="contactRef">
-      <VCardTitle class="text-h5 font-weight-bold"> Contact </VCardTitle>
-      <VCol
-        class="d-md-flex d-lg-flex ga-16 flex-column flex-lg-row flex-md-row"
-      >
-        <VCard class="d-flex ga-2 flex-column w-100 align-center mt-4">
-          <VIcon icon="bx-phone" size="24" />
-          <span class="text-lg-h6 text-md-h6">
-            {{ listing.contact_details?.[0]?.phone_number }}</span
-          >
-        </VCard>
-        <VCard class="d-flex ga-2 flex-column w-100 align-center mt-4">
-          <VIcon icon="bx-mail-send" size="24" />
-          <span class="text-lg-h6 text-md-h6">{{
-            listing.contact_details?.[0]?.email
-          }}</span>
-        </VCard>
-        <VCard class="d-flex ga-2 flex-column w-100 align-center mt-4">
-          <VIcon icon="bx-globe" size="24" />
-          <span class="text-lg-h6 text-md-h6">{{
-            listing.contact_details?.[0]?.website
-          }}</span>
-        </VCard>
-      </VCol>
-    </VCard>
+      </VCard>
+    </section>
+    <section ref="reviewRef">
+      <VCard>
+        <VCardTitle class="text-h5 font-weight-bold"> Reviews </VCardTitle>
+      </VCard>
+    </section>
   </VCol>
 </template>
 
@@ -190,6 +207,10 @@ meta:
 
 .info-wrapper {
   margin-top: 100px;
+}
+
+section {
+  scroll-margin-top: 100px;
 }
 
 @media (max-width: 768px) {
