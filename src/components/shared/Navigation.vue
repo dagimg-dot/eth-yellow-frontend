@@ -1,7 +1,7 @@
 <script setup>
 import { useAuthStore } from "@/store/modules/auth";
 import { storeToRefs } from "pinia";
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, watch, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
 import avatar from "../../assets/images/avatar.png";
@@ -19,9 +19,21 @@ const onResize = () => {
   isXs.value = window.innerWidth < 1110;
 };
 
+const handleScroll = () => {
+  const scrollY = window.scrollY;
+  if (scrollY > 100) {
+    drawer.value = null;
+  }
+};
+
 onMounted(() => {
   onResize();
   window.addEventListener("resize", onResize, { passive: true });
+  window.addEventListener("scroll", handleScroll);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", handleScroll);
 });
 
 watch(isXs, () => {
