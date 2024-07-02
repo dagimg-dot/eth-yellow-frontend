@@ -93,9 +93,9 @@ const loginHandler = async () => {
 
             <!-- remember me checkbox -->
             <div
-              class="d-flex align-center justify-space-between flex-wrap mt-1 mb-2"
+              class="d-flex align-center justify-space-between flex-wrap mt-2 mb-2"
             >
-              <VCheckbox v-model="form.remember" label="Remember me" />
+              <div></div>
 
               <RouterLink class="text-primary ms-2 mb-1" to="">
                 Forgot Password?
