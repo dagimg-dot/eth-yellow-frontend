@@ -161,7 +161,6 @@ const signupHandler = async () => {
             <span class="mx-4">or</span>
             <VDivider />
           </VCol>
-          <!-- auth providers -->
           <VCol cols="12" class="text-center">
             <AuthProvider />
           </VCol>

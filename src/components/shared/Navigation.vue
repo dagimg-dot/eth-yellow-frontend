@@ -40,6 +40,7 @@ const authenticate = () => {
     authStore.logout();
     toast.success("Logout successful");
   }
+  drawer.value = null;
 };
 </script>
 
