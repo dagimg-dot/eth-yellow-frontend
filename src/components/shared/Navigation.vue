@@ -13,7 +13,7 @@ const authStore = useAuthStore();
 const route = useRoute();
 const isAuthPage = route.fullPath.includes("/auth");
 const { isLoggedIn, user } = storeToRefs(authStore);
-const { name: themeName, global: globalTheme } = useTheme();
+const { name: themeName } = useTheme();
 
 const onResize = () => {
   isXs.value = window.innerWidth < 1110;
