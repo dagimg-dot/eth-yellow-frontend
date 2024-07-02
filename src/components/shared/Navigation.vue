@@ -97,7 +97,7 @@ const authenticate = () => {
     >
       <CompanyCard class="animate-fade-in-right" />
       <VSpacer />
-      <nav v-if="!isXs" :class="isAuthPage ? 'nav-fix': ''">
+      <nav v-if="!isXs" :class="isAuthPage ? 'nav-fix' : ''">
         <VBtn to="/">Home</VBtn>
         <VBtn to="/listings">Listings</VBtn>
         <VBtn to="/services">Services</VBtn>
@@ -126,6 +126,7 @@ const authenticate = () => {
         <NavbarThemeSwitcher class="animate-fade-in-left" />
         <UserAvatarBadge class="animate-fade-in-left" />
       </div>
+      <NavbarThemeSwitcher v-if="isXs" class="animate-fade-in-left" />
       <VAppBarNavIcon
         @click="drawer = !drawer"
         v-if="isXs"
