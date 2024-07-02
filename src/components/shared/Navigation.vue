@@ -4,13 +4,16 @@ import { storeToRefs } from "pinia";
 import { onMounted, ref, watch } from "vue";
 import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
+import avatar from "../../assets/images/avatar.png";
+import { useTheme } from "vuetify";
 
 const isXs = ref(false);
 const drawer = ref(null);
 const authStore = useAuthStore();
 const route = useRoute();
 const isAuthPage = route.fullPath.includes("/auth");
-const { isLoggedIn } = storeToRefs(authStore);
+const { isLoggedIn, user } = storeToRefs(authStore);
+const { name: themeName, global: globalTheme } = useTheme();
 
 const onResize = () => {
   isXs.value = window.innerWidth < 1110;
@@ -50,10 +53,70 @@ const authenticate = () => {
       temporary
       location="top"
       v-model:model-value="drawer"
-      class="nav-drawer"
+      :class="
+        themeName == 'light'
+          ? 'nav-drawer nav-drawer-bg-light'
+          : 'nav-drawer nav-drawer-bg-dark'
+      "
     >
       <VContainer class="d-flex flex-column justify-space-between">
         <VList variant="plain">
+          <div class="text-end">
+            <VBtn icon="mdi-close" @click="drawer = null" variant="text" />
+          </div>
+          <VExpansionPanels v-if="isLoggedIn">
+            <VExpansionPanel>
+              <VExpansionPanelTitle>
+                <VListItem>
+                  <template #prepend>
+                    <VListItemAction start>
+                      <VBadge
+                        dot
+                        location="bottom right"
+                        offset-x="3"
+                        offset-y="3"
+                        color="success"
+                      >
+                        <VAvatar color="primary" variant="tonal">
+                          <VImg :src="avatar" />
+                        </VAvatar>
+                      </VBadge>
+                    </VListItemAction>
+                  </template>
+
+                  <VListItemTitle class="font-weight-semibold">
+                    {{ user.username }}
+                  </VListItemTitle>
+                  <VListItemSubtitle>User</VListItemSubtitle>
+                </VListItem>
+              </VExpansionPanelTitle>
+              <VExpansionPanelText>
+                <VListItem link to="/user/profile">
+                  <template #prepend>
+                    <VIcon class="me-2" icon="bx-user" size="22" />
+                  </template>
+
+                  <VListItemTitle>Profile</VListItemTitle>
+                </VListItem>
+
+                <VListItem link to="/user/listings">
+                  <template #prepend>
+                    <VIcon class="me-2" icon="ri-file-list-3-fill" size="22" />
+                  </template>
+
+                  <VListItemTitle>My Business</VListItemTitle>
+                </VListItem>
+
+                <VListItem link>
+                  <template #prepend>
+                    <VIcon class="me-2" icon="fontisto-favorite" size="22" />
+                  </template>
+
+                  <VListItemTitle>Favorites</VListItemTitle>
+                </VListItem>
+              </VExpansionPanelText>
+            </VExpansionPanel>
+          </VExpansionPanels>
           <VListItem>
             <RouterLink to="/" class="text-decoration-none text-primary">
               <VListItemTitle>Home</VListItemTitle>
@@ -148,9 +211,22 @@ const authenticate = () => {
   margin-right: 9.4rem;
 }
 
+.v-expansion-panel {
+  background: transparent;
+}
+
+.nav-drawer-bg-light {
+  // background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(104, 104, 117, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+.nav-drawer-bg-dark {
+  background-color: rgba(35, 35, 51, 0.7);
+  backdrop-filter: blur(10px);
+}
+
 .nav-drawer {
-  background-color: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(5px);
   color: #dddf00;
   position: absolute;
   top: 0;
