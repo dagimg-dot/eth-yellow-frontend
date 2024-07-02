@@ -45,5 +45,9 @@
     scale: 0.8;
     margin: 0;
   }
+
+  a {
+    margin-left: -20px;
+  }
 }
 </style>

@@ -86,7 +86,9 @@ const authenticate = () => {
             >
           </VListItem>
           <VListItem v-if="route.fullPath !== '/listings/add'">
-            <VBtn variant="outlined" to="/listings/add">Add Your Business</VBtn>
+            <VBtn variant="outlined" to="/listings/add" class="w-100"
+              >Add Your Business</VBtn
+            >
           </VListItem>
         </VList>
       </VContainer>
