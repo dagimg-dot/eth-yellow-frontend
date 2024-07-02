@@ -296,11 +296,11 @@ const updateProfile = async () => {
         </VRow>
       </VCard>
     </VCol>
-  </VRow>
   <ResetPasswordModal
     :dialog="changeDialogVisible"
     @change:dialog="changeDialogVisible = $event"
   />
+  </VRow>
 </template>
 
 <route lang="yaml">

@@ -2,7 +2,7 @@
 import { useListing } from "@/composables/useListing";
 import avatar from "../../assets/images/avatar.png";
 import bgImage from "../../assets/images/fill_form3.jpg";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { ref } from "vue";
 
 const route = useRoute();
@@ -151,6 +151,12 @@ const tabs = [
               <div class="text-lg-h6 text-md-h6">Country</div>
               <div class="text-lg-h6 text-md-h6">
                 {{ listing.locations?.[0]?.country }}
+              </div>
+            </div>
+            <div class="d-flex justify-space-between">
+              <div class="text-lg-h6 text-md-h6">Postal Code</div>
+              <div class="text-lg-h6 text-md-h6">
+                {{ listing.locations?.[0]?.postal_code }}
               </div>
             </div>
           </VCol>
