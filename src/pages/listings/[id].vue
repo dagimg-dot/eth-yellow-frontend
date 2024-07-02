@@ -153,6 +153,12 @@ const tabs = [
                 {{ listing.locations?.[0]?.country }}
               </div>
             </div>
+            <div class="d-flex justify-space-between">
+              <div class="text-lg-h6 text-md-h6">Postal Code</div>
+              <div class="text-lg-h6 text-md-h6">
+                {{ listing.locations?.[0]?.postal_code }}
+              </div>
+            </div>
           </VCol>
         </div>
       </VCard>
