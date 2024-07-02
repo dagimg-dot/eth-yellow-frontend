@@ -2,7 +2,7 @@
 import { useListing } from "@/composables/useListing";
 import avatar from "../../assets/images/avatar.png";
 import bgImage from "../../assets/images/fill_form3.jpg";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { ref } from "vue";
 
 const route = useRoute();
