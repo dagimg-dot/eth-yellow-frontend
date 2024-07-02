@@ -193,6 +193,7 @@ const tabs = [
     <section ref="reviewRef">
       <VCard>
         <VCardTitle class="text-h5 font-weight-bold"> Reviews </VCardTitle>
+        <Reviews />
       </VCard>
     </section>
   </VCol>

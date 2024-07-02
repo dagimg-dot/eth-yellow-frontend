@@ -1,0 +1,14 @@
+mutation AddReview($business_id: uuid!, $comment: String!, $rating: Int!) {
+  insert_reviews_one(
+    object: { business_id: $business_id, comment: $comment, rating: $rating }
+  ) {
+    business_id
+    review_id
+    comment
+    rating
+    updated_at
+    user {
+      username
+    }
+  }
+}

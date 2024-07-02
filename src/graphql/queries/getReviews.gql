@@ -1,0 +1,15 @@
+query GetReviews($business_id: uuid!) {
+  reviews(
+    where: { business_id: { _eq: $business_id } }
+    order_by: { updated_at: desc }
+  ) {
+    business_id
+    comment
+    updated_at
+    review_id
+    rating
+    user {
+      username
+    }
+  }
+}
