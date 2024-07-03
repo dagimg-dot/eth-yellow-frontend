@@ -12,8 +12,14 @@ const {
 <template>
   <div class="d-flex flex-column ga-4 w-100">
     <Header title="Your Listings" />
-    <FilterBar />
-    <VRow>
+    <FilterBar :isDisabled="userListings.length == 0" />
+    <VContainer v-if="userListings.length == 0" class="text-center">
+      <VCardTitle>You have no registered listings</VCardTitle>
+      <VBtn variant="outlined" to="/listings/add" class="w-auto mt-6"
+        >Add Your Business</VBtn
+      >
+    </VContainer>
+    <VRow v-else>
       <VCol lg="4" sm="6" cols="12" v-for="listing in userListings">
         <ListingCard
           :listing="listing"
@@ -25,7 +31,7 @@ const {
     <div class="d-flex justify-center mt-6">
       <div>
         <VBtn
-          v-if="isLoadMoreBtnVisible"
+          v-if="isLoadMoreBtnVisible && userListings.length > 0"
           @click="loadMoreUserListings"
           variant="text"
           block
