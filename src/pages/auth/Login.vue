@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useLogin } from "@/composables/useLogin";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
 import { useAuthStore } from "@/store/modules/auth";
 
@@ -28,6 +28,17 @@ const loginForm = ref(null);
 
 const { loading, error, result, executeLogin } = useLogin();
 const router = useRouter();
+const route = useRoute();
+
+const handleNavigation = () => {
+  const return_url = route.query.return_url;
+  if (return_url) {
+    router.push(return_url);
+    return;
+  }
+
+  router.push("/");
+};
 
 const loginHandler = async () => {
   const { valid } = await loginForm.value.validate();
@@ -40,7 +51,7 @@ const loginHandler = async () => {
 
   if (result.value && result.value.success) {
     toast.success(result.value.message);
-    router.push("/");
+    handleNavigation(route.query, router);
 
     authStore.login(result.value.accessToken, result.value.user);
   }

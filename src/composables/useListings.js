@@ -1,4 +1,4 @@
-import { ref, unref, watch } from "vue";
+import { ref, watch } from "vue";
 import { useQuery } from "@vue/apollo-composable";
 import { toast } from "vue3-toastify";
 import { useListingStore } from "@/store/modules/listingStore";

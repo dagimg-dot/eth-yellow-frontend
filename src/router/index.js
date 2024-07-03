@@ -66,8 +66,10 @@ router.beforeEach((to, from, next) => {
   next();
 });
 
-router.afterEach(() => {
-  // store.loading(false)
+router.afterEach((to, from) => {
+  if (to.path === "/notfound") {
+    toast.error("Page not found!");
+  }
 });
 
 export default router;

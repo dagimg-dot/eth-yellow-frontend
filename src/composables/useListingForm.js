@@ -15,7 +15,6 @@ import { useRoute } from "vue-router";
 export function useListingForm(props, isEditModeRef) {
   const isEditMode = computed(() => isEditModeRef.value);
   const route = useRoute();
-  console.log(route.params.id)
 
   const form = ref({
     name: props.business?.name || "",
@@ -146,12 +145,7 @@ export function useListingForm(props, isEditModeRef) {
       categoryIds: getChoosenCategoriesID(),
     };
 
-    console.log(getChoosenCategoriesID());
-    console.log(categories.value)
-
     if (isEditMode.value) {
-      console.log("Update Listing");
-      console.log(business);
       await updateListing(business);
     } else {
       await addListing(business);

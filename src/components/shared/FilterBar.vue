@@ -16,6 +16,13 @@ const {
   categoryLoading,
   cityLoading,
 } = useFilters();
+
+const props = defineProps({
+  isDisabled: {
+    type: Boolean,
+    default: false,
+  },
+});
 </script>
 
 <template>
@@ -26,6 +33,7 @@ const {
         v-model="searchQuery"
         label="Search"
         placeholder="Search listings . . ."
+        :disabled="props.isDisabled"
       />
     </VCol>
     <div class="d-flex w-50">
@@ -41,6 +49,7 @@ const {
           @focus="fetchCategories()"
           :items="categories.map((category) => category.name)"
           :loading="categoryLoading"
+          :disabled="props.isDisabled"
         />
       </VCol>
       <VCol class="pr-0 w-75">
@@ -55,6 +64,7 @@ const {
           @focus="fetchCities()"
           :items="uniqueCities"
           :loading="cityLoading"
+          :disabled="props.isDisabled"
         />
       </VCol>
     </div>
