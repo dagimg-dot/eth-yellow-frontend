@@ -51,7 +51,7 @@ const signupHandler = async () => {
     toast.success(
       result.value.message + " You are being redirected to the login page"
     );
-    router.push("/auth/login");
+    router.push("/auth/login?return_url=/listings/add");
   }
 };
 </script>
