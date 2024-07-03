@@ -1,10 +1,12 @@
 <script setup>
 import { ADD_REVIEW_MUTATION } from "@/graphql/mutations";
 import { GET_REVIEWS } from "@/graphql/queries";
+import { useAuthStore } from "@/store/modules/auth";
 import { useMutation, useQuery } from "@vue/apollo-composable";
 import { formatDistanceToNow, parseISO } from "date-fns";
+import { storeToRefs } from "pinia";
 import { reactive } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
 
 const reviewForm = reactive({
@@ -13,6 +15,9 @@ const reviewForm = reactive({
 });
 
 const route = useRoute();
+const router = useRouter();
+const authStore = useAuthStore();
+const { isLoggedIn } = storeToRefs(authStore);
 
 const {
   result,
@@ -78,6 +83,13 @@ const submitReview = async () => {
   if (reviewForm.comment === "" || reviewForm.rating === 0) {
     return;
   }
+
+  if (!isLoggedIn.value) {
+    toast.error("You need to login to submit a review");
+    router.push(`/auth/login?return_url=${route.fullPath}`);
+    return;
+  }
+
   await addReview({
     business_id: route.params.id,
     comment: reviewForm.comment,
