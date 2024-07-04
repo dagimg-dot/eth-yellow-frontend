@@ -1,7 +1,9 @@
-query GetReviews($business_id: uuid!) {
+query GetReviews($business_id: uuid!, $offset: Int, $limit: Int) {
   reviews(
     where: { business_id: { _eq: $business_id } }
     order_by: { updated_at: desc }
+    limit: $limit
+    offset: $offset
   ) {
     business_id
     comment

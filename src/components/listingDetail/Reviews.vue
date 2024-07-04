@@ -4,8 +4,9 @@ import { GET_REVIEWS } from "@/graphql/queries";
 import { useAuthStore } from "@/store/modules/auth";
 import { useMutation, useQuery } from "@vue/apollo-composable";
 import { formatDistanceToNow, parseISO } from "date-fns";
+import gql from "graphql-tag";
 import { storeToRefs } from "pinia";
-import { reactive } from "vue";
+import { reactive, ref, computed } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
 
@@ -14,19 +15,45 @@ const reviewForm = reactive({
   rating: 0,
 });
 
+const currentPage = ref(1);
+const pageSize = ref(4);
+
 const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 const { isLoggedIn } = storeToRefs(authStore);
 
+const GET_TOTAL_REVIEW = gql`
+  query GET_TOTAL_REVIEWS {
+    reviews_aggregate {
+      aggregate {
+        count
+      }
+    }
+  }
+`;
+
+const { result: aggregateResult } = useQuery(GET_TOTAL_REVIEW, {
+  context: {
+    authRequired: false,
+  },
+});
+
+const resultTotal = computed(
+  () => aggregateResult.value?.reviews_aggregate?.aggregate?.count
+);
+
 const {
   result,
   loading,
+  fetchMore: fetchMoreReviews,
   onError: onFetchReiewError,
 } = useQuery(
   GET_REVIEWS,
   {
     business_id: route.params.id,
+    limit: pageSize.value,
+    offset: (currentPage.value - 1) * pageSize.value,
   },
   {
     context: {
@@ -34,6 +61,31 @@ const {
     },
   }
 );
+
+const resultData = computed(() => result.value?.reviews);
+
+const fetchNextPage = () => {
+  if (
+    currentPage.value < 0 ||
+    currentPage.value > Math.floor(resultTotal.value / pageSize.value)
+  ) {
+    return;
+  }
+
+  fetchMoreReviews({
+    variables: {
+      business_id: route.params.id,
+      limit: pageSize.value,
+      offset: (currentPage.value - 1) * pageSize.value,
+    },
+    updateQuery: (prevResult, { fetchMoreResult }) => {
+      if (!fetchMoreResult) return prevResult;
+      return {
+        reviews: fetchMoreResult.reviews,
+      };
+    },
+  });
+};
 
 onFetchReiewError(() => {
   toast.error("Failed to fetch reviews");
@@ -53,6 +105,8 @@ const {
       query: GET_REVIEWS,
       variables: {
         business_id: route.params.id,
+        limit: pageSize.value,
+        offset: (currentPage.value - 1) * pageSize.value,
       },
     });
     if (data?.insert_reviews_one && oldReview) {
@@ -60,9 +114,14 @@ const {
         query: GET_REVIEWS,
         variables: {
           business_id: route.params.id,
+          limit: pageSize.value,
+          offset: (currentPage.value - 1) * pageSize.value,
         },
         data: {
-          reviews: [data.insert_reviews_one, ...oldReview.reviews],
+          reviews: [
+            data.insert_reviews_one,
+            ...oldReview.reviews.slice(0, pageSize.value - 1),
+          ],
         },
       });
     }
@@ -136,13 +195,15 @@ const readableDate = (date) => {
   <VDivider />
   <VCardTitle class="mt-4">Other Users Reviews</VCardTitle>
   <div class="pa-4 d-flex flex-column ga-4">
-    <VCard v-if="result?.reviews.length == 0" class="text-center">
+    <VCard v-if="resultData?.length == 0" class="text-center">
       <VCardTitle>No reviews yet</VCardTitle>
     </VCard>
     <VSkeletonLoader
       v-else
       :loading="loading"
-      v-for="review in result?.reviews"
+      v-for="review in resultData"
+      type="list-item-three-line"
+      height="187px"
     >
       <VCol class="border rounded-lg">
         <VCard>
@@ -159,6 +220,13 @@ const readableDate = (date) => {
         </VCard>
       </VCol>
     </VSkeletonLoader>
+    <VCard>
+      <VPagination
+        v-model="currentPage"
+        :length="Math.floor(resultTotal / pageSize)"
+        @click="fetchNextPage"
+      ></VPagination>
+    </VCard>
   </div>
 </template>
 
