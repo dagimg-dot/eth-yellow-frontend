@@ -12,8 +12,8 @@ const pageSize = ref(4);
 const route = useRoute();
 
 const GET_TOTAL_REVIEW = gql`
-  query GET_TOTAL_REVIEWS {
-    reviews_aggregate {
+  query GET_TOTAL_REVIEWS($business_id: uuid!) {
+    reviews_aggregate(where: { business_id: { _eq: $business_id } }) {
       aggregate {
         count
       }
@@ -21,11 +21,17 @@ const GET_TOTAL_REVIEW = gql`
   }
 `;
 
-const { result: aggregateResult } = useQuery(GET_TOTAL_REVIEW, {
-  context: {
-    authRequired: false,
+const { result: aggregateResult } = useQuery(
+  GET_TOTAL_REVIEW,
+  {
+    business_id: route.params.id,
   },
-});
+  {
+    context: {
+      authRequired: false,
+    },
+  }
+);
 
 const resultTotal = computed(
   () => aggregateResult.value?.reviews_aggregate?.aggregate?.count
@@ -106,8 +112,9 @@ onFetchReiewError(() => {
       <ReviewCard :review="review" />
     </VSkeletonLoader>
     <VPagination
+      v-if="resultTotal > pageSize"
       v-model="currentPage"
-      :length="Math.floor(resultTotal / pageSize)"
+      :length="Math.ceil(resultTotal / pageSize)"
       @click="fetchNextPage"
       class="mt-4"
     ></VPagination>
