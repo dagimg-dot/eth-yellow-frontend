@@ -82,14 +82,15 @@ const changeAvatar = (file) => {
   if (files && files.length) {
     fileReader.readAsDataURL(files[0]);
     fileReader.onload = () => {
-      if (typeof fileReader.result === "string")
-        avatarImg.value.avatarImg = fileReader.result;
+      if (typeof fileReader.result === "string") {
+        avatarImg.value = fileReader.result;
+      }
     };
   }
 };
 
 const resetAvatar = () => {
-  avatar.value = "";
+  avatarImg.value = avatar;
 };
 
 const authStore = useAuthStore();
@@ -143,7 +144,12 @@ const updateProfile = async () => {
       <VCard title="Account Details">
         <VCardText class="d-flex">
           <!-- 👉 Avatar -->
-          <VAvatar rounded="lg" size="100" class="me-6" :image="avatar" />
+          <VAvatar
+            rounded="full"
+            size="100"
+            class="me-6 rounded-circle"
+            :image="avatarImg"
+          />
 
           <!-- 👉 Upload Photo -->
           <form class="d-flex flex-column justify-center ga-5">
@@ -296,10 +302,10 @@ const updateProfile = async () => {
         </VRow>
       </VCard>
     </VCol>
-  <ResetPasswordModal
-    :dialog="changeDialogVisible"
-    @change:dialog="changeDialogVisible = $event"
-  />
+    <ResetPasswordModal
+      :dialog="changeDialogVisible"
+      @change:dialog="changeDialogVisible = $event"
+    />
   </VRow>
 </template>
 
