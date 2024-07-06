@@ -145,9 +145,11 @@ const authenticate = () => {
           <VListItem>
             <VListItemTitle>Services</VListItemTitle>
           </VListItem>
-          <VListItem>
-            <VListItemTitle>Contact</VListItemTitle>
-          </VListItem>
+          <RouterLink to="/about" class="text-decoration-none text-primary">
+            <VListItem>
+              <VListItemTitle>About</VListItemTitle>
+            </VListItem>
+          </RouterLink>
         </VList>
         <VList class="text-end">
           <VDivider class="mb-2" />
@@ -179,7 +181,7 @@ const authenticate = () => {
         <VBtn to="/">Home</VBtn>
         <VBtn to="/listings">Listings</VBtn>
         <VBtn to="/services">Services</VBtn>
-        <VBtn to="/contact">Contact</VBtn>
+        <VBtn to="/about">About</VBtn>
       </nav>
       <VSpacer />
       <div class="d-flex ga-6 align-center" v-if="!isXs">
