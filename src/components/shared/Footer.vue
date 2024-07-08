@@ -26,9 +26,9 @@
               <RouterLink to="/listings" class="text-decoration-none"
                 >Listings</RouterLink
               >
-              <RouterLink to="/services" class="text-decoration-none"
+              <!-- <RouterLink to="/services" class="text-decoration-none"
                 >Services</RouterLink
-              >
+              > -->
               <RouterLink to="/contact" class="text-decoration-none"
                 >Contact</RouterLink
               >
