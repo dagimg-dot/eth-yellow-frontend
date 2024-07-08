@@ -142,9 +142,9 @@ const authenticate = () => {
               <VListItemTitle>Listings</VListItemTitle>
             </RouterLink>
           </VListItem>
-          <VListItem>
+          <!-- <VListItem>
             <VListItemTitle>Services</VListItemTitle>
-          </VListItem>
+          </VListItem> -->
           <RouterLink to="/about" class="text-decoration-none text-primary">
             <VListItem>
               <VListItemTitle>About</VListItemTitle>
@@ -180,7 +180,7 @@ const authenticate = () => {
       <nav v-if="!isXs" :class="isAuthPage ? 'nav-fix' : ''">
         <VBtn to="/">Home</VBtn>
         <VBtn to="/listings">Listings</VBtn>
-        <VBtn to="/services">Services</VBtn>
+        <!-- <VBtn to="/services">Services</VBtn> -->
         <VBtn to="/about">About</VBtn>
       </nav>
       <VSpacer />
