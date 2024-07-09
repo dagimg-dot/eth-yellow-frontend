@@ -14,10 +14,6 @@ import { pinia } from "@/store";
 
 const app = createApp(App);
 
-// set theme to light in the local storage
-if (!localStorage.getItem("theme")) {
-  localStorage.setItem("theme", "light");
-}
 
 app
   .use(router)

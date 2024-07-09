@@ -1,5 +1,10 @@
 import { useStorage } from "@vueuse/core";
 
+// set theme to light in the local storage
+if (!localStorage.getItem("theme")) {
+  localStorage.setItem("theme", "light");
+}
+   
 export const staticPrimaryColor = "#DDDF00";
 const currentTheme = useStorage("theme");
 
