@@ -4,8 +4,8 @@ import { useStorage } from "@vueuse/core";
 if (!localStorage.getItem("theme")) {
   localStorage.setItem("theme", "light");
 }
-   
-export const staticPrimaryColor = "#DDDF00";
+
+export const staticPrimaryColor = "#FFB400";
 const currentTheme = useStorage("theme");
 
 const theme = {
@@ -14,7 +14,7 @@ const theme = {
     light: {
       dark: false,
       colors: {
-        primary: "#DDDF00",
+        primary: staticPrimaryColor,
         "on-primary": "#fff",
         secondary: "#8592A3",
         "on-secondary": "#fff",
