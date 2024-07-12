@@ -1,7 +1,7 @@
 <script setup>
 import { useListings } from "@/composables/useListings";
 
-const { listings, listingLoading, loadMoreListings, isLoadMoreBtnVisible } =
+const { listings, listingLoading, loadMoreListings, isLoadMoreBtnVisible} =
   useListings({
     type: "all",
   });
@@ -12,6 +12,9 @@ const { listings, listingLoading, loadMoreListings, isLoadMoreBtnVisible } =
     <Header title="All Listings" />
     <FilterBar />
     <VRow>
+      <VCol lg="4" sm="6" cols="12" v-show="listingLoading" v-for="item in 3">
+        <VSkeletonLoader :loading="listingLoading" type="image, article" />
+      </VCol>
       <VCol lg="4" sm="6" cols="12" v-for="listing in listings">
         <ListingCard
           :listing="listing"

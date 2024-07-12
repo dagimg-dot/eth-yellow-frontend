@@ -1,6 +1,6 @@
 <script setup>
 import avatar from "../../assets/images/fill_form3.jpg";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useRouter } from "vue-router";
 
 const isLiked = ref(false);
@@ -52,7 +52,6 @@ const listingDetail = {
 </script>
 
 <template>
-  <VSkeletonLoader :loading="props.loading" type="image, article">
     <VCard
       class="w-100 cursor-pointer card-hover-effect"
       @click="goToDetialsPage"
@@ -105,7 +104,6 @@ const listingDetail = {
         @update:dialog="deleteDialogVisible = $event"
       />
     </VCard>
-  </VSkeletonLoader>
 </template>
 
 <style scoped>
