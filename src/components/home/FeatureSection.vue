@@ -6,7 +6,7 @@ import { features } from "@/data/features";
   <v-layout max-width="1400px" class="mx-auto my-8 d-flex flex-column">
     <VRow>
       <VCol cols="12" class="mb-8">
-        <h2 class="text-h4 text-center font-weight-bold">Features</h2>
+        <h2 class="text-h4 text-center font-weight-bold text-primary">Features</h2>
       </VCol>
     </VRow>
 
