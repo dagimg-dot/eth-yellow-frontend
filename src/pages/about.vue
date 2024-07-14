@@ -24,7 +24,7 @@ onMounted(() => {
         >
       </VCol>
 
-      <VCol cols="12" md="6" class="pl-10">
+      <VCol cols="12" md="6" class="pl-lg-10">
         <v-img
           :src="bikeRiders"
           alt="Bike Riders"
